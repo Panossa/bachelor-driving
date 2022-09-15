@@ -1,0 +1,9 @@
+mat-grid-tile {
+	background: #77746f;
+}
+
+mat-grid-tile img {
+	/*  Fit image to grid cell. Even though in Angular, img is directly inside the tile,
+			using > doesn't work because it compiles with an extra div, oof. */
+	height: 101%;
+}

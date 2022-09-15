@@ -1,3 +1,42 @@
+<mat-toolbar color="primary" class="navbar mat-elevation-z6">
+	<div>Bachelor Driving</div>
+	<mat-icon (click)="reload()">refresh</mat-icon>
+</mat-toolbar>
+
+<div class="content">
+	<question-media></question-media>
+	<question-area></question-area>
+</div>
+
 <div>
-  <p>Test</p>
+	<p>Test</p>
+	<button color="primary" mat-button>Normal button</button>
+	<button color="accent" mat-raised-button>Raised button</button>
+	<button mat-flat-button>Flat button</button>
+	<button color="warn" mat-stroked-button>Stroked button</button>
+
+	<div *ngFor="let _ of [].constructor(4); let i = index">
+		<!-- Higher number = bigger text -->
+		<div class="mat-display-{{i+1}}">Header {{i + 1}}</div>
+	</div>
+
+
+	<div class="mat-headline">Headline</div>
+	<div class="mat-title">Title</div>
+	<div class="mat-subheader">Subheader</div>
+	<!-- Higher number = bigger text -->
+	<div class="mat-subheading-1">Subheading 1</div> <!-- basically h4 -->
+	<div class="mat-subheading-2">Subheading 2</div> <!-- basically h3 -->
+
+	<div class="mat-typography">
+		<h1>Headline</h1>
+		<h2>Title</h2>
+		<h4>Subheading 1</h4>
+		<h3>Subheading 2</h3>
+	</div>
+
+	<div class="mat-body-1">Body 1</div>
+	<div class="mat-body-2">Body 2</div> <!-- BOLD text! -->
+	<div class="mat-caption">Caption</div>
+
 </div>

@@ -1,0 +1,13 @@
+.navbar {
+	justify-content: space-between;
+}
+
+.content {
+	display: flex;
+	justify-content: space-around;
+	padding: 5%;
+}
+
+.content > * {
+	flex-grow: 1;
+}
