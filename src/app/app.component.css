@@ -4,10 +4,14 @@
 
 .content {
 	display: flex;
-	justify-content: space-around;
 	padding: 5%;
 }
 
-.content > * {
-	flex-grow: 1;
+question-media {
+	width: 40%;
+	/*flex-basis: 40%; - also possible but confusing to explain */
+}
+
+question-area {
+	width: 60%;
 }

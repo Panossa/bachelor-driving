@@ -1,0 +1,4 @@
+export enum RoadSide {
+	TRAVEL_DIRECTION,
+	OPPOSITE_DIRECTION
+}

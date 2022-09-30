@@ -1,10 +1,58 @@
-.question-content {
+.question-wrapper {
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
+	justify-content: flex-start;
+	height: 100%;
 	padding-left: 5%;
 }
 
 .question-header {
 	display: flex;
 	justify-content: space-between;
+}
+
+.question-content {
+	flex-grow: 1;
+}
+
+.answers {
+	margin-bottom: 2rem;
+}
+
+/*
+	Yes, this uses a deprecated feature. Both classes used here are only created at runtime.
+	They can't be accessed from code here otherwise.
+ 	The deprecation comes from the Angular team as a response to the removal of the "deep" functionality by the W3C spec.
+ 	I.e. Angular recommends trying to use something else if possible cause they want to change ng-deep as soon as a
+ 	replacement is announced by W3C, which hasn't happened yet.
+*/
+::ng-deep .mat-checkbox .mat-checkbox-inner-container {
+	width: 2rem;
+	height: 2rem;
+}
+
+mat-checkbox {
+	margin-right: 1rem;
+}
+
+.checkbox-disabled {
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+mat-card-content {
+	overflow-wrap: break-word;
+	overflow: auto;
+	max-height: 20vh;
+	margin-bottom: 2em;
+}
+
+.action-buttons {
+	display: flex;
+	justify-content: space-around;
+}
+
+.action-buttons button {
+	font-size: 2rem;
+	height: 4rem;
 }

@@ -1,4 +1,4 @@
-export enum Rotation {
+export enum Rotations {
 	RIGHT = 0,
 	DOWN = 90,
 	LEFT = 180,

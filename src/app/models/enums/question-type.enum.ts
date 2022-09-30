@@ -1,0 +1,6 @@
+export enum QuestionType {
+	DO_QUESTION,
+	CHECK_QUESTION,
+	EXPECT_QUESTION,
+	RIGHT_OF_WAY_QUESTION
+}

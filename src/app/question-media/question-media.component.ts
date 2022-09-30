@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Tile} from '../models/tile';
 import {TileType} from '../models/tileType.enum';
-import {Rotation} from '../models/rotation.enum';
 import {StraightRoadGenerator} from '../models/generators/straight-road.generator';
+import {Rotations} from '../models/enums/rotation.enum';
 
 @Component({
 	selector: 'question-media',
@@ -15,19 +15,19 @@ export class QuestionMediaComponent implements OnInit {
 
 	// temp:
 	private straightRoad = [
-		StraightRoadGenerator.getRoadsideTile(Rotation.RIGHT), new Tile(TileType.ROAD_STRAIGHT), StraightRoadGenerator.getRoadsideTile(Rotation.LEFT),
-		StraightRoadGenerator.getRoadsideTile(Rotation.RIGHT), new Tile(TileType.ROAD_STRAIGHT), StraightRoadGenerator.getRoadsideTile(Rotation.LEFT),
-		StraightRoadGenerator.getRoadsideTile(Rotation.RIGHT), new Tile(TileType.ROAD_STRAIGHT), StraightRoadGenerator.getRoadsideTile(Rotation.LEFT)
+		StraightRoadGenerator.getRoadsideTile(Rotations.RIGHT), new Tile(TileType.ROAD_STRAIGHT), StraightRoadGenerator.getRoadsideTile(Rotations.LEFT),
+		StraightRoadGenerator.getRoadsideTile(Rotations.RIGHT), new Tile(TileType.ROAD_STRAIGHT), StraightRoadGenerator.getRoadsideTile(Rotations.LEFT),
+		StraightRoadGenerator.getRoadsideTile(Rotations.RIGHT), new Tile(TileType.ROAD_STRAIGHT), StraightRoadGenerator.getRoadsideTile(Rotations.LEFT)
 	];
 	private crossingRoad = [
-		new Tile(TileType.SIDEWALK_CURVED, Rotation.DOWN), 		new Tile(TileType.STOP, Rotation.DOWN), new Tile(TileType.SIDEWALK_CURVED, Rotation.LEFT),
-		new Tile(TileType.STOP, Rotation.RIGHT), 							new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotation.LEFT),
-		new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), 	new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
+		new Tile(TileType.SIDEWALK_CURVED, Rotations.DOWN), 		new Tile(TileType.STOP, Rotations.DOWN), new Tile(TileType.SIDEWALK_CURVED, Rotations.LEFT),
+		new Tile(TileType.STOP, Rotations.RIGHT), 							new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotations.LEFT),
+		new Tile(TileType.SIDEWALK_CURVED, Rotations.RIGHT), 	new Tile(TileType.STOP, Rotations.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotations.UP)
 	]
 	private tJunction = [
-		StraightRoadGenerator.getRoadsideTile(Rotation.DOWN), StraightRoadGenerator.getRoadsideTile(Rotation.DOWN), StraightRoadGenerator.getRoadsideTile(Rotation.DOWN),
-		new Tile(TileType.STOP, Rotation.RIGHT), 							new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotation.LEFT),
-		new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), 	new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
+		StraightRoadGenerator.getRoadsideTile(Rotations.DOWN), StraightRoadGenerator.getRoadsideTile(Rotations.DOWN), StraightRoadGenerator.getRoadsideTile(Rotations.DOWN),
+		new Tile(TileType.STOP, Rotations.RIGHT), 							new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotations.LEFT),
+		new Tile(TileType.SIDEWALK_CURVED, Rotations.RIGHT), 	new Tile(TileType.STOP, Rotations.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotations.UP)
 	]
 
 	ngOnInit(): void {

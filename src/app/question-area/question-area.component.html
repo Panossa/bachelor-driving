@@ -1,5 +1,45 @@
-<div class="question-content">
-	<h1>{{questionTitle}}</h1>
-	<h1>Punkte: {{points}}</h1>
+<div class="question-wrapper">
+	<div class="question-header">
+		<div class="mat-display-2">{{questionTitle}}</div>
+		<div class="mat-display-2">Punkte: {{points}}</div>
+	</div>
+
+	<div class="question-content">
+		<div class="answers">
+			<div *ngFor="let answer of answers; let i = index">
+				<h1>
+					<mat-checkbox (click)="registerSolution(i)" color="primary" [class.checkbox-disabled]="isSolutionShown"> </mat-checkbox>
+					<mat-checkbox *ngIf="isSolutionShown" color="warn" class="checkbox-disabled" [checked]="answer.isCorrect"> </mat-checkbox>
+					{{answer.answerText}}
+				</h1>
+			</div>
+		</div>
+
+		<mat-card *ngIf="isInfoCardShown">
+			<mat-card-title>Auflösung</mat-card-title>
+			<mat-card-content>
+				Hier kommt ein Erklärungstext.
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div class="action-buttons">
+		<button
+			color="{{isSolutionShown ? '' : 'primary'}}"
+			mat-raised-button
+			(click)="submitAnswers()">
+			Auswertung
+		</button>
+		<button
+			mat-raised-button
+			(click)="toggleInfoCard()">
+			Erklärung
+		</button>
+		<button
+			color="{{isSolutionShown ? 'primary' : ''}}"
+			mat-raised-button>
+			Weiter
+		</button>
+	</div>
 </div>
 
