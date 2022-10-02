@@ -32,7 +32,6 @@ export class QuestionMediaComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.tilesData = Math.random() < 0.5 ? this.crossingRoad : this.straightRoad;
-		// this.tilesData = this.tJunction;
 	}
 
 }

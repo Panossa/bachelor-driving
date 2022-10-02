@@ -5,7 +5,7 @@ import {TurnSignals} from './enums/turn-signal.enum';
 
 export class TrafficSubject {
 	readonly type: TrafficSubjectTypes;
-	readonly location: GridPosition;
+	readonly gridPosition: GridPosition;
 	readonly orientation: RoadSide;
 	readonly turnSignal: TurnSignals;
 	// readonly braking;
@@ -13,7 +13,7 @@ export class TrafficSubject {
 
 	constructor(type: TrafficSubjectTypes, location: GridPosition, orientation: RoadSide, turnSignal: TurnSignals) {
 		this.type = type;
-		this.location = location;
+		this.gridPosition = location;
 		this.orientation = orientation;
 		this.turnSignal = turnSignal;
 	}

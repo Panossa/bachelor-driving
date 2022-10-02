@@ -1,5 +1,5 @@
-import {DoAnswer} from './enums/do-answer.enum';
 import {TrafficSubject} from './traffic-subject';
+import CAR_FROM_RIGHT_TO_THEIR_LEFT from './demo-data/car-from-right-to-their-left';
 
 export class Circumstance {
 	readonly id: string; // mostly (subject/object) (current position) [destination]. E.g. CAR_FROM_RIGHT_TO_THEIR_LEFT
@@ -8,9 +8,16 @@ export class Circumstance {
 	readonly needsRoadForward: boolean;
 	// readonly needsRoadBack: boolean; - not relevant, ever?
 
-	// define all possible answers here because ALL possible DoAnswers might
-	// include too many irrelevant ones like driving over train tracks:
-	readonly possibleToDoAnswers: DoAnswer[];
 	readonly trafficSubjects: TrafficSubject[];
 	// readonly trafficHazards etc. could be added here.
+
+	constructor() {
+		// TODO get random circ from the demo folder
+		const circData = CAR_FROM_RIGHT_TO_THEIR_LEFT;
+		this.id = circData.id;
+		this.needsRoadLeft = circData.needsRoadLeft;
+		this.needsRoadRight = circData.needsRoadRight;
+		this.needsRoadForward = circData.needsRoadForward;
+		this.trafficSubjects = circData.trafficSubjects;
+	}
 }

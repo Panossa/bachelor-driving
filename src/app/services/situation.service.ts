@@ -13,8 +13,6 @@ export class SituationService {
 	currentSituation: Situation;
 	questionType: QuestionType;
 
-	correctAnswers: DoAnswer[] = [];
-
 	constructor(private rightOfWayService: RightOfWayService) {}
 
 	get answers(): DoAnswer[] {
@@ -23,15 +21,21 @@ export class SituationService {
 
 	generateNewSituation(): void {
 		this.questionType = QuestionType.DO_QUESTION; // TODO add support for more
-		this.currentSituation = new Situation(this.questionType);
+		this.currentSituation = new Situation();
 
 		// Check for main rule giver in the following order: [TrafficLights, TrafficSigns, default: RightOfWay]
 		// TODO other rule systems
 		if(this.questionType === QuestionType.DO_QUESTION) {
-			this.correctAnswers = this.rightOfWayService.calculateCorrectDoAnswers(
+			// Get all possible answers for the current answer type.
+			// For this, ask the highest active rule set for all possible ones.
+			// For later: if(no traffic lights and no signs present) {
+			this.currentSituation.answers = this.rightOfWayService.possibleDoAnswers;
+
+			this.currentSituation.correctAnswers = this.rightOfWayService.calculateCorrectDoAnswers(
 				this.currentSituation.driveDirection,
 				this.currentSituation.circumstances
 			);
+			// }
 		}
 
 		console.log('Generated situation!');
