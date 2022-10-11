@@ -1,7 +1,7 @@
 import {Circumstance} from './circumstance';
 import {DriveDirections} from './enums/drive-direction.enum';
-import {randomEnum} from '../utils/enum-utils';
 import {DoAnswer} from './enums/do-answer.enum';
+import {randomEnum} from '../utils/enum-utils';
 
 export class Situation {
 
@@ -21,7 +21,7 @@ export class Situation {
 
 		// Define at least one circumstance, up to 2 depending on the skill level.
 		// The upper limit can be higher if enough base circumstances are defined,
-		// as to not create a situation where 3 too similar circumstances are mixed.
+		// as to not create a situation where 3 too similar circumstances are mixed. TODO test with 4 right turning cars
 		const circumstanceCount = 1; //Math.random() > 0.5 ? 1 : 2
 		console.log(`Generating ${circumstanceCount} circumstances.`);
 		for (let circumstanceIndex = 0; circumstanceIndex < circumstanceCount; circumstanceIndex++) {

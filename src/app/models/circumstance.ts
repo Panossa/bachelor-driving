@@ -1,5 +1,6 @@
 import {TrafficSubject} from './traffic-subject';
-import CAR_FROM_RIGHT_TO_THEIR_LEFT from './demo-data/car-from-right-to-their-left';
+import {CIRCUMSTANCE_LIST} from './demo-data';
+import {randomIntFromInterval} from '../utils/number-utils';
 
 export class Circumstance {
 	readonly id: string; // mostly (subject/object) (current position) [destination]. E.g. CAR_FROM_RIGHT_TO_THEIR_LEFT
@@ -12,8 +13,7 @@ export class Circumstance {
 	// readonly trafficHazards etc. could be added here.
 
 	constructor() {
-		// TODO get random circ from the demo folder
-		const circData = CAR_FROM_RIGHT_TO_THEIR_LEFT;
+		const circData = CIRCUMSTANCE_LIST[randomIntFromInterval(0, CIRCUMSTANCE_LIST.length-1)];
 		this.id = circData.id;
 		this.needsRoadLeft = circData.needsRoadLeft;
 		this.needsRoadRight = circData.needsRoadRight;

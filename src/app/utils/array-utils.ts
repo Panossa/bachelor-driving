@@ -6,9 +6,10 @@ export function removeDuplicatesFilter(value, index, self) {
  * Removes all occurrences of elements from arrayA in arrayB
  */
 export function removeElementsOfAFromB(arrayA, arrayB) {
-	arrayB.forEach((subject, index) => {
+	for (let i = arrayB.length-1; i >= 0; i--) {
+		const subject = arrayB[i];
 		if (arrayA.includes(subject)) {
-			arrayB.splice(index, 1);
+			arrayB.splice(i, 1);
 		}
-	});
+	}
 }

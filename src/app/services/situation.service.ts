@@ -20,11 +20,10 @@ export class SituationService {
 	}
 
 	generateNewSituation(): void {
-		this.questionType = QuestionType.DO_QUESTION; // TODO add support for more
+		this.questionType = QuestionType.DO_QUESTION;
 		this.currentSituation = new Situation();
 
 		// Check for main rule giver in the following order: [TrafficLights, TrafficSigns, default: RightOfWay]
-		// TODO other rule systems
 		if(this.questionType === QuestionType.DO_QUESTION) {
 			// Get all possible answers for the current answer type.
 			// For this, ask the highest active rule set for all possible ones.
