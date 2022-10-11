@@ -9,26 +9,17 @@ import {TurnSignals} from '../models/enums/turn-signal.enum';
  * @param remainingTrafficSubjects a reference to all remaining traffic subjects on the street
  */
 export function haveNoneOnTheirRightFilter(subject: TrafficSubject, remainingTrafficSubjects: TrafficSubject[]): boolean {
-	console.log(`checking onTheirRight for ${JSON.stringify(subject)}`);
 	switch (subject.gridPosition) {
 		case GridPosition.BOTTOM:
-			console.log('on bottom. checking right');
 			// nobody on the right?
-			console.log(`on right: ${JSON.stringify(remainingTrafficSubjects.find(otherSubject => {
-				console.log(JSON.stringify(otherSubject));
-				return otherSubject.gridPosition === GridPosition.RIGHT;
-			}))}`);
 			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.RIGHT);
 		case GridPosition.LEFT:
-			console.log('on left. checking bottom');
 			// nobody on the bottom?
 			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.BOTTOM);
 		case GridPosition.RIGHT:
-			console.log('on right. checking top');
 			// nobody on the top?
 			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.TOP);
 		case GridPosition.TOP:
-			console.log('on top. checking left');
 			// nobody on the left?
 			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.LEFT);
 		default:
@@ -37,7 +28,6 @@ export function haveNoneOnTheirRightFilter(subject: TrafficSubject, remainingTra
 }
 
 export function haveNoneOnOppositeSiteWhoWantToDriveForward(subject: TrafficSubject, remainingTrafficSubjects: TrafficSubject[]): boolean {
-	console.log(`Traffic subject: ${JSON.stringify(subject)} is on grid position ${subject.gridPosition}`);
 	switch (subject.gridPosition) {
 		case GridPosition.RIGHT:
 			return !remainingTrafficSubjects.find(otherSubject =>

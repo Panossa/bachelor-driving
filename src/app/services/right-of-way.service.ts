@@ -64,13 +64,15 @@ export class RightOfWayService {
 			gridPosition: GridPosition.BOTTOM,
 			turnSignal: mapToTurnSignal(driveDirection)
 		};
-		console.log(`oneself: ${JSON.stringify(this.oneself)}`);
 
 		// Get list of traffic subjects
 		let trafficSubjects: TrafficSubject[] = [...circumstances.map(circumstance => circumstance.trafficSubjects).reduce(
 			(previousSubjects, currentSubjects) => [...previousSubjects, ...currentSubjects],
 			[]
-		).filter(removeDuplicatesFilter), // watch out when adding color to subjects!
+			// only filter those who are relevant to right of way, i.e. ignore subjects driving AWAY from the situation
+		).filter(subject => subject.orientation === RoadSide.OPPOSITE_DIRECTION)
+			// watch out when adding color to subjects!
+			.filter(removeDuplicatesFilter),
 			// add the car of the user
 			this.oneself
 		];
@@ -90,15 +92,13 @@ export class RightOfWayService {
 			// waiting for their turn
 			subject.orientation === RoadSide.OPPOSITE_DIRECTION
 			// wanting to drive right
-			&& subject.turnSignal === TurnSignals.RIGHT // TODO shouldn't that be !== RIGHT? RIGHT turning subjects can't get into a stalemate
+			&& subject.turnSignal !== TurnSignals.RIGHT
 		).length;
 
 		// Check roadCount against subjects waiting to go right. (In this simulation only one can wait per street.)
-		console.log(roadCount);
-		console.log(waitingTrafficSubjects);
 		if (roadCount === waitingTrafficSubjects) {
 			// Nobody can drive, result is empty!
-			console.log('Stalemate!');
+			console.log(`Stalemate! Road count: ${roadCount}. Subjects waiting for their turn who don't want to go right: ${waitingTrafficSubjects}.\nRoad count == waitingTrafficSubjects => Stalemate.`);
 			return [];
 		}
 
@@ -110,7 +110,7 @@ export class RightOfWayService {
 		for (let i = 0; i < originalTrafficSubjectCount && trafficSubjects.length > 0; i++) {
 			// 1. First go those who want to go to their right
 			let parallelDrivingSubjects = trafficSubjects.filter(subject => subject.turnSignal === TurnSignals.RIGHT);
-			console.log(`1. TempSubjects: ${JSON.stringify(parallelDrivingSubjects)}`);
+			console.log(`1. Remaining after "right": ${JSON.stringify(parallelDrivingSubjects)}`);
 
 			// 2. Then go those who want to drive forward and have no one on their right.
 			parallelDrivingSubjects = parallelDrivingSubjects.concat(
@@ -120,7 +120,7 @@ export class RightOfWayService {
 					// & who have no one on their right
 					.filter((subject) => haveNoneOnTheirRightFilter(subject, trafficSubjects))
 			);
-			console.log(`2. TempSubjects: ${JSON.stringify(parallelDrivingSubjects)}`);
+			console.log(`2. Remaining after "forward & none on right": ${JSON.stringify(parallelDrivingSubjects)}`);
 
 			// 3. Finally, those who want to drive left and have nobody on their right, as well as nobody blocking from the opposite site.
 			// Theoretically, this only needs to be tested once.
@@ -132,7 +132,7 @@ export class RightOfWayService {
 				// & who have no one on the opposite site who wants to go forward (or right, but we already checked that above)
 				.filter((subject: TrafficSubject) => haveNoneOnOppositeSiteWhoWantToDriveForward(subject, trafficSubjects))
 			);
-			console.log(`3. TempSubjects: ${JSON.stringify(parallelDrivingSubjects)}`);
+			console.log(`3. Remaining after "left & none on right & none opposite forward": ${JSON.stringify(parallelDrivingSubjects)}`);
 
 			// Add all subjects who can drive in this iteration to the result order.
 			if(parallelDrivingSubjects.length > 0) {
