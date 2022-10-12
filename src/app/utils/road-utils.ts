@@ -1,7 +1,7 @@
 import {GridPosition} from '../models/enums/grid-position.enum';
 import {TrafficSubject} from '../models/traffic-subject';
-import {Circumstance} from '../models/circumstance';
 import {TurnSignals} from '../models/enums/turn-signal.enum';
+import {Situation} from '../models/situation';
 
 /**
  * Used in filter() methods to only return subjects who have no one on their right on the grid.
@@ -57,17 +57,7 @@ export function haveNoneOnOppositeSiteWhoWantToDriveForward(subject: TrafficSubj
 /**
  * Calculates road counts used in the circumstance array. Counts +1 for the 'back' road the user is on.
  */
-export function calculateRoadCount(circumstances: Circumstance[]): number {
-	const roads = {
-		needsRoadRight: false,
-		needsRoadLeft: false,
-		needsRoadForward: false
-	};
-	circumstances.forEach(circ => {
-		roads.needsRoadRight = roads.needsRoadRight || circ.needsRoadRight;
-		roads.needsRoadLeft = roads.needsRoadLeft || circ.needsRoadLeft;
-		roads.needsRoadForward = roads.needsRoadForward || circ.needsRoadForward;
-	})
+export function calculateRoadCount(situation: Situation): number {
 	// Count roads set to true + 1 for the road the user is on.
-	return Number(roads.needsRoadRight) + Number(roads.needsRoadLeft) + Number(roads.needsRoadForward) + 1;
+	return Number(situation.needsRoadRight) + Number(situation.needsRoadLeft) + Number(situation.needsRoadForward) + 1;
 }

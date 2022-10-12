@@ -30,10 +30,7 @@ export class SituationService {
 			// For later: if(no traffic lights and no signs present) {
 			this.currentSituation.answers = this.rightOfWayService.possibleDoAnswers;
 
-			this.currentSituation.correctAnswers = this.rightOfWayService.calculateCorrectDoAnswers(
-				this.currentSituation.driveDirection,
-				this.currentSituation.circumstances
-			);
+			this.currentSituation.correctAnswers = this.rightOfWayService.calculateCorrectDoAnswers(this.currentSituation);
 			// }
 		}
 

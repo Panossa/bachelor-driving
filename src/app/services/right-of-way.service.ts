@@ -1,6 +1,4 @@
 import {Injectable} from '@angular/core';
-import {DriveDirections} from '../models/enums/drive-direction.enum';
-import {Circumstance} from '../models/circumstance';
 import {TrafficSubject} from '../models/traffic-subject';
 import {DoAnswer} from '../models/enums/do-answer.enum';
 import {RoadSide} from '../models/enums/road-side.enum';
@@ -9,6 +7,7 @@ import {removeDuplicatesFilter, removeElementsOfAFromB} from '../utils/array-uti
 import {TrafficSubjectTypes} from '../models/enums/traffic-subject-type.enum';
 import {GridPosition} from '../models/enums/grid-position.enum';
 import {calculateRoadCount, haveNoneOnOppositeSiteWhoWantToDriveForward, haveNoneOnTheirRightFilter} from '../utils/road-utils';
+import {Situation} from '../models/situation';
 
 /**
  * This probably doesn't need to be a service after all, but it might grow in complexity later.
@@ -26,8 +25,8 @@ export class RightOfWayService {
 
 	private oneself: TrafficSubject;
 
-	calculateCorrectDoAnswers(driveDirection: DriveDirections, circumstances: Circumstance[]): DoAnswer[] {
-		const orderedTrafficSubjects = this.calculateRightOfWayOrder(driveDirection, circumstances);
+	calculateCorrectDoAnswers(situation: Situation): DoAnswer[] {
+		const orderedTrafficSubjects = this.calculateRightOfWayOrder(situation);
 		if (orderedTrafficSubjects.length === 0) {
 			return [DoAnswer.STALEMATE];
 		} else {
@@ -54,19 +53,19 @@ export class RightOfWayService {
 	 * 	[1] = Others
 	 * ]
 	 */
-	calculateRightOfWayOrder(driveDirection: DriveDirections, circumstances: Circumstance[]): TrafficSubject[][] {
-		console.log(`Calculate with: ${driveDirection} and ${JSON.stringify(circumstances)}`);
+	calculateRightOfWayOrder(situation: Situation): TrafficSubject[][] {
+		console.log(`Calculate with: ${JSON.stringify(situation)}`);
 
 		this.oneself = {
 			type: TrafficSubjectTypes.CAR,
 			// viewed from a central perspective, the user is on the opposite driving direction for everyone involved
 			orientation: RoadSide.OPPOSITE_DIRECTION,
 			gridPosition: GridPosition.BOTTOM,
-			turnSignal: mapToTurnSignal(driveDirection)
+			turnSignal: mapToTurnSignal(situation.driveDirection)
 		};
 
 		// Get list of traffic subjects
-		let trafficSubjects: TrafficSubject[] = [...circumstances.map(circumstance => circumstance.trafficSubjects).reduce(
+		let trafficSubjects: TrafficSubject[] = [...situation.circumstances.map(circumstance => circumstance.trafficSubjects).reduce(
 			(previousSubjects, currentSubjects) => [...previousSubjects, ...currentSubjects],
 			[]
 			// only filter those who are relevant to right of way, i.e. ignore subjects driving AWAY from the situation
@@ -85,7 +84,7 @@ export class RightOfWayService {
 
 		// Edge case 2 of 2: If there are subjects on every road and all want to drive forward or left => stalemate.
 		// Count how many roads there are
-		const roadCount = calculateRoadCount(circumstances); // for "back" road, where the user sits.
+		const roadCount = calculateRoadCount(situation);
 
 		// Count traffic subjects waiting for their turn AND wanting to go right.
 		const waitingTrafficSubjects = trafficSubjects.filter(subject =>

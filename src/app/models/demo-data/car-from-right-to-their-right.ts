@@ -6,9 +6,6 @@ import {TurnSignals} from '../enums/turn-signal.enum';
 
 export const CAR_FROM_RIGHT_TO_THEIR_RIGHT: Circumstance = {
 	id: "CAR_FROM_RIGHT_TO_THEIR_RIGHT",
-	needsRoadForward: true,
-	needsRoadLeft: false,
-	needsRoadRight: true,
 	trafficSubjects: [
 		{
 			gridPosition: GridPosition.RIGHT,
