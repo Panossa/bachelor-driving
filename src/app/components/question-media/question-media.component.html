@@ -1,0 +1,19 @@
+<mat-grid-list cols="3" rowHeight="1:1" gutterSize="-1px">
+	<mat-grid-tile *ngFor="let tile of tilesData; let i = index">
+		<div class="subject-container">
+			<div class="subject-positioning"
+					 [class.positioning-top]="tile.rotation === Rotations.DOWN"
+					 [class.positioning-right]="tile.rotation === Rotations.LEFT"
+					 [class.positioning-bottom]="tile.rotation === Rotations.UP"
+					 [class.positioning-left]="tile.rotation === Rotations.RIGHT"
+			>
+			<subject-car [class.vertical-subject]="tile.rotation === Rotations.DOWN || Rotations.UP"
+									 [class.horizontal-subject]="tile.rotation === Rotations.LEFT || Rotations.RIGHT"></subject-car>
+			<subject-car [class.vertical-subject]="tile.rotation === Rotations.DOWN || Rotations.UP"
+									 [class.horizontal-subject]="tile.rotation === Rotations.LEFT || Rotations.RIGHT"></subject-car>
+			</div>
+		</div>
+		<img src="../../assets/img/{{tile.tileType.toLowerCase()}}.png" alt=""
+				 style="{{'rotate: ' + tile.rotation+'deg'}};"/>
+	</mat-grid-tile>
+</mat-grid-list>

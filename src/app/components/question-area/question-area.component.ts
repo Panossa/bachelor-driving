@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Answer} from '../models/answer';
+import {Answer} from '../../models/answer';
 
 @Component({
 	selector: 'question-area',

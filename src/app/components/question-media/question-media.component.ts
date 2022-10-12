@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Tile} from '../models/tile';
-import {TileType} from '../models/tileType.enum';
-import {StraightRoadGenerator} from '../models/generators/straight-road.generator';
-import {Rotations} from '../models/enums/rotation.enum';
+import {Tile} from '../../models/tile';
+import {TileType} from '../../models/tileType.enum';
+import {StraightRoadGenerator} from '../../models/generators/straight-road.generator';
+import {Rotations} from '../../models/enums/rotation.enum';
+import {SituationService} from '../../services/situation.service';
 
 @Component({
 	selector: 'question-media',
@@ -11,7 +12,10 @@ import {Rotations} from '../models/enums/rotation.enum';
 })
 export class QuestionMediaComponent implements OnInit {
 
+	Rotations = Rotations;
 	tilesData: Tile[]; //always exactly 9 elements!
+
+	constructor(private situationService: SituationService) {}
 
 	// temp:
 	private straightRoad = [

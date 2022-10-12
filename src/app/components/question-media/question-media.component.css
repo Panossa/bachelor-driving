@@ -1,0 +1,58 @@
+/* Fixing background shine-through: */
+mat-grid-tile > * {
+	background: #77746f;
+}
+
+mat-grid-tile img {
+	/*  Fit image to grid cell. Even though in Angular, img is directly inside the tile,
+			using > doesn't work because it compiles with an extra div, oof. */
+	height: 101%;
+}
+
+.subject-container {
+	position: absolute;
+	z-index: 1;
+	height: 101%;
+	width: 101%;
+}
+
+.subject-positioning {
+	/*height: 100%;*/
+	/*width: 100%;*/
+	display: flex;
+	align-content: center;
+	justify-content: space-around;
+}
+
+/* =================== */
+
+.positioning-top {
+	margin-top: 10%;
+}
+
+.positioning-right {
+	align-items: flex-end;
+	/*margin-left: 10%;*/
+	flex-direction: column;
+}
+
+.positioning-bottom {
+	margin-top: 45%;
+}
+
+.positioning-left {
+	margin-left: 10%;
+	flex-direction: column;
+}
+
+/* =================== */
+
+.vertical-subject {
+	height: 45%;
+	width: 27%;
+}
+
+.horizontal-subject {
+	height: 27%;
+	width: 49%;
+}
