@@ -65,13 +65,9 @@ export class RightOfWayService {
 		};
 
 		// Get list of traffic subjects
-		let trafficSubjects: TrafficSubject[] = [...situation.circumstances.map(circumstance => circumstance.trafficSubjects).reduce(
-			(previousSubjects, currentSubjects) => [...previousSubjects, ...currentSubjects],
-			[]
-			// only filter those who are relevant to right of way, i.e. ignore subjects driving AWAY from the situation
-		).filter(subject => subject.orientation === RoadSide.OPPOSITE_DIRECTION)
-			// watch out when adding color to subjects!
-			.filter(removeDuplicatesFilter),
+		let trafficSubjects: TrafficSubject[] = [
+			// relevant traffic subjects for this case are all those who're waiting for the turn, i.e. those driving opposite to the user
+			...situation.trafficSubjects.filter(subject => subject.orientation === RoadSide.OPPOSITE_DIRECTION),
 			// add the car of the user
 			this.oneself
 		];

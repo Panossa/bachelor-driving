@@ -8,7 +8,6 @@ export class Circumstance {
 	// readonly trafficHazards etc. could be added here.
 
 	constructor() {
-		// TODO only allow the generation of circs that involve users on unused roads through constructor arguments for the grid position
 		const circData = CIRCUMSTANCE_LIST[randomIntFromInterval(0, CIRCUMSTANCE_LIST.length-1)];
 		this.id = circData.id;
 		this.trafficSubjects = circData.trafficSubjects;
