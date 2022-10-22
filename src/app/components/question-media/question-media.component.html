@@ -1,16 +1,22 @@
 <mat-grid-list cols="3" rowHeight="1:1" gutterSize="-1px">
 	<mat-grid-tile *ngFor="let tile of tilesData; let i = index">
-		<div class="subject-container">
+		<div class="subject-container" *ngIf="!subjectData[i].isEmpty()">
 			<div class="subject-positioning"
-					 [class.positioning-top]="tile.rotation === Rotations.DOWN"
-					 [class.positioning-right]="tile.rotation === Rotations.LEFT"
-					 [class.positioning-bottom]="tile.rotation === Rotations.UP"
-					 [class.positioning-left]="tile.rotation === Rotations.RIGHT"
+					 [class.positioning-top]="isOnGridPosition(subjectData[i], GridPosition.TOP)"
+					 [class.positioning-right]="isOnGridPosition(subjectData[i], GridPosition.RIGHT)"
+					 [class.positioning-bottom]="isOnGridPosition(subjectData[i], GridPosition.BOTTOM)"
+					 [class.positioning-left]="isOnGridPosition(subjectData[i], GridPosition.LEFT)"
 			>
-			<subject-car [class.vertical-subject]="tile.rotation === Rotations.DOWN || Rotations.UP"
-									 [class.horizontal-subject]="tile.rotation === Rotations.LEFT || Rotations.RIGHT"></subject-car>
-			<subject-car [class.vertical-subject]="tile.rotation === Rotations.DOWN || Rotations.UP"
-									 [class.horizontal-subject]="tile.rotation === Rotations.LEFT || Rotations.RIGHT"></subject-car>
+				<!--	Car placeholder 1	-->
+				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM])"
+						 [class.horizontal-subject]="isOnGridPositions(subjectData[i], [GridPosition.LEFT, GridPosition.RIGHT])">
+					<subject-car *ngIf="subjectData[i].trafficSubject1 != null" [gridPosition]="subjectData[i].trafficSubject1?.gridPosition"></subject-car>
+				</div>
+				<!--	Car placeholder 2	-->
+				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM])"
+						 [class.horizontal-subject]="isOnGridPositions(subjectData[i], [GridPosition.LEFT, GridPosition.RIGHT])">
+					<subject-car *ngIf="subjectData[i].trafficSubject2 != null" [gridPosition]="subjectData[i].trafficSubject2?.gridPosition"></subject-car>
+				</div>
 			</div>
 		</div>
 		<img src="../../assets/img/{{tile.tileType.toLowerCase()}}.png" alt=""

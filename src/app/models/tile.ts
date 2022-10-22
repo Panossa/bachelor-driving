@@ -1,11 +1,11 @@
 import {TileType} from './tileType.enum';
-import {Rotations} from './enums/rotation.enum';
+import {Rotation} from './enums/rotation.enum';
 
 export class Tile {
 	tileType: TileType;
-	rotation: Rotations;
+	rotation: Rotation;
 
-	constructor(tileType: TileType, rotation: Rotations = Rotations.RIGHT) {
+	constructor(tileType: TileType, rotation: Rotation = Rotation.RIGHT) {
 		this.tileType = tileType;
 		this.rotation = rotation;
 	}

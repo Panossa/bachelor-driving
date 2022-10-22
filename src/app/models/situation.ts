@@ -3,18 +3,24 @@ import {DriveDirections} from './enums/drive-direction.enum';
 import {DoAnswer} from './enums/do-answer.enum';
 import {randomEnum} from '../utils/enum-utils';
 import {GridPosition} from './enums/grid-position.enum';
-import {TurnSignals} from './enums/turn-signal.enum';
+import {mapToTurnSignal, TurnSignals} from './enums/turn-signal.enum';
 import {RoadSide} from './enums/road-side.enum';
 import {TrafficSubject} from './traffic-subject';
+import {TrafficSubjectTypes} from './enums/traffic-subject-type.enum';
 
 export class Situation {
 
 	readonly driveDirection: DriveDirections;
+	readonly oneself: TrafficSubject;
 
 	needsRoadLeft: boolean = false;
 	needsRoadRight: boolean = false;
 	needsRoadForward: boolean = false;
 	// readonly needsRoadBack: boolean; - not relevant, ever?
+
+	/**
+	 * Relevant traffic subjects other than the user.
+	 */
 	trafficSubjects: TrafficSubject[] = [];
 
 
@@ -28,6 +34,14 @@ export class Situation {
 	constructor() {
 		// Define where the user needs to drive
 		this.driveDirection = randomEnum(DriveDirections, 1);
+
+		this.oneself = {
+			type: TrafficSubjectTypes.CAR,
+			// viewed from a central perspective, the user is on the opposite driving direction for everyone involved
+			orientation: RoadSide.OPPOSITE_DIRECTION,
+			gridPosition: GridPosition.BOTTOM,
+			turnSignal: mapToTurnSignal(this.driveDirection)
+		}
 
 		// Define at least one circumstance, up to 2 depending on the skill level.
 		// The upper limit can be higher if enough base circumstances are defined,
@@ -51,6 +65,7 @@ export class Situation {
 				}
 			});
 		});
+		this.updateNeededRoads(this.oneself);
 	}
 
 	/**

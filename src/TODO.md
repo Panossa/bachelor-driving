@@ -2,34 +2,34 @@
 
 - Add overlay grid for cars etc:
 	- For this, each tile of the normal grid contains not only the background img but also another div "overlay" with:
-    - position: absolute
-    - z-index: 1 (higher number for other overlays, then)
-    - height: 101%, width: 101% (100 might be fine, too, but let's keep the tradition)
-  - The background tile does not need any special css, damn. No idea how I missed that earlier.
-  - How to position cars correctly though? Idea (doesn't work for signs):
-    - div.subject-placement:
-      - (maybe:) height: 100%
-      - (maybe:) width: 100%
-      - display: flex
-      - align-content: center (?)
-      - justify-content: space-around
-      - align-items: flex-end (ONLY for right cause margin-left works weirdly)
-      - margin-top: 
-        - bottom: 45% 
-        - top: 10%
-        - left/right: null/none
-      - margin-left:
-        - left: 10%
-        - right: ? weird, probably needs margin-right 
-    - div.subject-placement > img.subject: // important: include EMPTY img if no subject is there for space-around to work!
-      - (max-)height: 45%? (for left/right: 27%)
-      - (max-)width: 27%? (for left/right: 49%)
-      - height and width are probably not solid numbers
-- Fix current generation problems
+	- position: absolute
+	- z-index: 1 (higher number for other overlays, then)
+	- height: 101%, width: 101% (100 might be fine, too, but let's keep the tradition)
+	- The background tile does not need any special css, damn. No idea how I missed that earlier.
+	- How to position cars correctly though? Idea (doesn't work for signs):
+	- div.subject-placement:
+	- (maybe:) height: 100%
+	- (maybe:) width: 100%
+	- display: flex
+	- align-content: center (?)
+	- justify-content: space-around
+	- align-items: flex-end (ONLY for right cause margin-left works weirdly)
+	- margin-top: 
+	- bottom: 45% 
+	- top: 10%
+	- left/right: null/none
+	- margin-left:
+	- left: 10%
+	- right: ? weird, probably needs margin-right 
+	- div.subject-placement > img.subject: // important: include EMPTY img if no subject is there for space-around to work!
+	- (max-)height: 45%? (for left/right: 27%)
+	- (max-)width: 27%? (for left/right: 49%)
+	- height and width are probably not solid numbers
+- As a simple second rule set, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
 - Do circs really need "needsRoadForward", "needsRoadLeft" and "needsRoadRight"? They could be inferred from subjects' turn signals and grid positions
 - Check if it's possible for each rule set to define their own answers without collecting them all in one enum.
-  - see right-of-way.service.ts#possibleDoAnswers
+	- see right-of-way.service.ts#possibleDoAnswers
 - road-utils.ts: Change GridPositions to cyclic doubly linked list? BOTTOM would be index 0 (can be used alongside an enum)
-  - Example call: `grid[GridPosition.BOTTOM].right` would get the right road from the POV of a bottom car
+	- Example call: `grid[GridPosition.BOTTOM].right` would get the right road from the POV of a bottom car
 - situation.service.ts: Other rule systems, no only DO_QUESTION.
 - The current road calculation ignores it's possible to turn into a garage rather than street, sadly.

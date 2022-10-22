@@ -2,10 +2,8 @@ import {Injectable} from '@angular/core';
 import {TrafficSubject} from '../models/traffic-subject';
 import {DoAnswer} from '../models/enums/do-answer.enum';
 import {RoadSide} from '../models/enums/road-side.enum';
-import {mapToTurnSignal, TurnSignals} from '../models/enums/turn-signal.enum';
-import {removeDuplicatesFilter, removeElementsOfAFromB} from '../utils/array-utils';
-import {TrafficSubjectTypes} from '../models/enums/traffic-subject-type.enum';
-import {GridPosition} from '../models/enums/grid-position.enum';
+import {TurnSignals} from '../models/enums/turn-signal.enum';
+import {removeElementsOfAFromB} from '../utils/array-utils';
 import {calculateRoadCount, haveNoneOnOppositeSiteWhoWantToDriveForward, haveNoneOnTheirRightFilter} from '../utils/road-utils';
 import {Situation} from '../models/situation';
 
@@ -23,14 +21,12 @@ export class RightOfWayService {
 		DoAnswer.STALEMATE
 	];
 
-	private oneself: TrafficSubject;
-
 	calculateCorrectDoAnswers(situation: Situation): DoAnswer[] {
 		const orderedTrafficSubjects = this.calculateRightOfWayOrder(situation);
 		if (orderedTrafficSubjects.length === 0) {
 			return [DoAnswer.STALEMATE];
 		} else {
-			if(orderedTrafficSubjects[0].includes(this.oneself)){
+			if(orderedTrafficSubjects[0].includes(situation.oneself)){
 				return [DoAnswer.START_DRIVING];
 			} else {
 				return [DoAnswer.STAY];
@@ -56,26 +52,18 @@ export class RightOfWayService {
 	calculateRightOfWayOrder(situation: Situation): TrafficSubject[][] {
 		console.log(`Calculate with: ${JSON.stringify(situation)}`);
 
-		this.oneself = {
-			type: TrafficSubjectTypes.CAR,
-			// viewed from a central perspective, the user is on the opposite driving direction for everyone involved
-			orientation: RoadSide.OPPOSITE_DIRECTION,
-			gridPosition: GridPosition.BOTTOM,
-			turnSignal: mapToTurnSignal(situation.driveDirection)
-		};
-
 		// Get list of traffic subjects
 		let trafficSubjects: TrafficSubject[] = [
 			// relevant traffic subjects for this case are all those who're waiting for the turn, i.e. those driving opposite to the user
 			...situation.trafficSubjects.filter(subject => subject.orientation === RoadSide.OPPOSITE_DIRECTION),
 			// add the car of the user
-			this.oneself
+			situation.oneself
 		];
 		const totalTrafficSubjectCount = trafficSubjects.length;
 
 		// Edge case 1 of 2: If there is only the user on the road, the right of way is clear.
 		if(totalTrafficSubjectCount <= 1) {
-			return [[this.oneself]];
+			return [[situation.oneself]];
 		}
 
 		// Edge case 2 of 2: If there are subjects on every road and all want to drive forward or left => stalemate.
