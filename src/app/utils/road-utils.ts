@@ -2,6 +2,7 @@ import {GridPosition} from '../models/enums/grid-position.enum';
 import {TrafficSubject} from '../models/traffic-subject';
 import {TurnSignals} from '../models/enums/turn-signal.enum';
 import {Situation} from '../models/situation';
+import {Tile} from '../models/tile';
 
 /**
  * Used in filter() methods to only return subjects who have no one on their right on the grid.
@@ -60,4 +61,15 @@ export function haveNoneOnOppositeSiteWhoWantToDriveForward(subject: TrafficSubj
 export function calculateRoadCount(situation: Situation): number {
 	// Count roads set to true + 1 for the road the user is on.
 	return Number(situation.needsRoadRight) + Number(situation.needsRoadLeft) + Number(situation.needsRoadForward) + 1;
+}
+
+
+export function generateRoadTiles(situation: Situation): Tile[] {
+	if (situation.needsRoadForward && !situation.needsRoadRight && !situation.needsRoadLeft) {
+		// return straight road
+		return [
+
+		];
+	}
+	return null;
 }

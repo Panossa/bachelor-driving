@@ -1,30 +1,6 @@
 # Todo
 
-- Add overlay grid for cars etc:
-	- For this, each tile of the normal grid contains not only the background img but also another div "overlay" with:
-	- position: absolute
-	- z-index: 1 (higher number for other overlays, then)
-	- height: 101%, width: 101% (100 might be fine, too, but let's keep the tradition)
-	- The background tile does not need any special css, damn. No idea how I missed that earlier.
-	- How to position cars correctly though? Idea (doesn't work for signs):
-	- div.subject-placement:
-	- (maybe:) height: 100%
-	- (maybe:) width: 100%
-	- display: flex
-	- align-content: center (?)
-	- justify-content: space-around
-	- align-items: flex-end (ONLY for right cause margin-left works weirdly)
-	- margin-top: 
-	- bottom: 45% 
-	- top: 10%
-	- left/right: null/none
-	- margin-left:
-	- left: 10%
-	- right: ? weird, probably needs margin-right 
-	- div.subject-placement > img.subject: // important: include EMPTY img if no subject is there for space-around to work!
-	- (max-)height: 45%? (for left/right: 27%)
-	- (max-)width: 27%? (for left/right: 49%)
-	- height and width are probably not solid numbers
+- situation.ts:53 make sure at least three roads are used... unless it's a straight road!
 - As a simple second rule set, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
 - Do circs really need "needsRoadForward", "needsRoadLeft" and "needsRoadRight"? They could be inferred from subjects' turn signals and grid positions
 - Check if it's possible for each rule set to define their own answers without collecting them all in one enum.

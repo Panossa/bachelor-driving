@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {GridPosition} from '../../../models/enums/grid-position.enum';
+import {HSLColor} from '../../../models/hsl-color';
 
 @Component({
 	selector: 'subject-car',
@@ -10,6 +11,8 @@ export class CarComponent implements OnInit {
 
 	@Input()
 	gridPosition: GridPosition;
+	@Input()
+	baseColor: HSLColor = HSLColor.of(0, 0, 100);
 
 	rotation: number = 0;
 
