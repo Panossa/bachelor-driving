@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {TrafficSubject} from '../models/traffic-subject';
 import {DoAnswer} from '../models/enums/do-answer.enum';
 import {RoadSide} from '../models/enums/road-side.enum';
-import {TurnSignals} from '../models/enums/turn-signal.enum';
+import {TurnSignal} from '../models/enums/turn-signal.enum';
 import {removeElementsOfAFromB} from '../utils/array-utils';
-import {calculateRoadCount, haveNoneOnOppositeSiteWhoWantToDriveForward, haveNoneOnTheirRightFilter} from '../utils/road-utils';
+import {haveNoneOnOppositeSiteWhoWantToDriveForward, haveNoneOnTheirRightFilter} from '../utils/road-utils';
 import {Situation} from '../models/situation';
 
 /**
@@ -67,21 +67,19 @@ export class RightOfWayService {
 		}
 
 		// Edge case 2 of 2: If there are subjects on every road and all want to drive forward or left => stalemate.
-		// Count how many roads there are
-		const roadCount = calculateRoadCount(situation);
 
 		// Count traffic subjects waiting for their turn AND wanting to go right.
 		const waitingTrafficSubjects = trafficSubjects.filter(subject =>
 			// waiting for their turn
 			subject.orientation === RoadSide.OPPOSITE_DIRECTION
 			// wanting to drive right
-			&& subject.turnSignal !== TurnSignals.RIGHT
+			&& subject.turnSignal !== TurnSignal.RIGHT
 		).length;
 
 		// Check roadCount against subjects waiting to go right. (In this simulation only one can wait per street.)
-		if (roadCount === waitingTrafficSubjects) {
+		if (situation.streetLayout.roadCount === waitingTrafficSubjects) {
 			// Nobody can drive, result is empty!
-			console.log(`Stalemate! Road count: ${roadCount}. Subjects waiting for their turn who don't want to go right: ${waitingTrafficSubjects}.\nRoad count == waitingTrafficSubjects => Stalemate.`);
+			console.log(`Stalemate! Road count: ${situation.streetLayout.roadCount}. Subjects waiting for their turn who don't want to go right: ${waitingTrafficSubjects}.\nRoad count == waitingTrafficSubjects => Stalemate.`);
 			return [];
 		}
 
@@ -92,14 +90,14 @@ export class RightOfWayService {
 		const originalTrafficSubjectCount = trafficSubjects.length;
 		for (let i = 0; i < originalTrafficSubjectCount && trafficSubjects.length > 0; i++) {
 			// 1. First go those who want to go to their right
-			let parallelDrivingSubjects = trafficSubjects.filter(subject => subject.turnSignal === TurnSignals.RIGHT);
+			let parallelDrivingSubjects = trafficSubjects.filter(subject => subject.turnSignal === TurnSignal.RIGHT);
 			console.log(`1. Remaining after "right": ${JSON.stringify(parallelDrivingSubjects)}`);
 
 			// 2. Then go those who want to drive forward and have no one on their right.
 			parallelDrivingSubjects = parallelDrivingSubjects.concat(
 				trafficSubjects
 					// ...who want to drive forward
-					.filter(subject => subject.turnSignal === TurnSignals.NONE)
+					.filter(subject => subject.turnSignal === TurnSignal.NONE)
 					// & who have no one on their right
 					.filter((subject) => haveNoneOnTheirRightFilter(subject, trafficSubjects))
 			);
@@ -109,7 +107,7 @@ export class RightOfWayService {
 			// Theoretically, this only needs to be tested once.
 			parallelDrivingSubjects = parallelDrivingSubjects.concat(trafficSubjects
 				// ...who want to drive left
-				.filter(subject => subject.turnSignal === TurnSignals.LEFT)
+				.filter(subject => subject.turnSignal === TurnSignal.LEFT)
 				// & who have no one on their right
 				.filter((subject) => haveNoneOnTheirRightFilter(subject, trafficSubjects))
 				// & who have no one on the opposite site who wants to go forward (or right, but we already checked that above)

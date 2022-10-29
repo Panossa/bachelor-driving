@@ -1,4 +1,4 @@
-import {TileType} from './tileType.enum';
+import {TileType} from './tile-type.enum';
 import {Rotation} from './enums/rotation.enum';
 
 export class Tile {

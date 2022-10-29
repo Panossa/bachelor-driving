@@ -1,22 +1,35 @@
-import {DriveDirections} from './drive-direction.enum';
+import {GridPosition} from './grid-position.enum';
 
-export enum TurnSignals {
+export enum TurnSignal {
 	NONE,
 	LEFT,
 	RIGHT,
 	BOTH
 }
 
-export function mapToTurnSignal(driveDirection: DriveDirections): TurnSignals {
-	switch (driveDirection) {
-		case DriveDirections.RIGHT:
-			return TurnSignals.RIGHT;
-		case DriveDirections.LEFT:
-			return TurnSignals.LEFT;
-		case DriveDirections.FORWARD:
-			return TurnSignals.NONE;
-		case DriveDirections.NONE:
-			console.error('"None" drive direction given to mapToTurnSignal!');
-			return TurnSignals.NONE;
+export function mapGridPositionsToTurnSignal(gridPositionOrigin: GridPosition, gridPositionTarget: GridPosition): TurnSignal {
+	console.log(`Mapping grid positions ${gridPositionOrigin} and ${gridPositionTarget} to turn signal`);
+	if ((gridPositionOrigin === GridPosition.BOTTOM && gridPositionTarget === GridPosition.RIGHT)
+		|| (gridPositionOrigin === GridPosition.RIGHT && gridPositionTarget === GridPosition.TOP)
+		|| (gridPositionOrigin === GridPosition.TOP && gridPositionTarget === GridPosition.LEFT
+		|| (gridPositionOrigin === GridPosition.LEFT && gridPositionTarget === GridPosition.BOTTOM))
+	) {
+		return TurnSignal.RIGHT;
+	}
+
+	if ((gridPositionOrigin === GridPosition.BOTTOM && gridPositionTarget === GridPosition.TOP)
+		|| (gridPositionOrigin === GridPosition.TOP && gridPositionTarget === GridPosition.BOTTOM
+		|| (gridPositionOrigin === GridPosition.RIGHT && gridPositionTarget === GridPosition.LEFT)
+			|| (gridPositionOrigin === GridPosition.LEFT && gridPositionTarget === GridPosition.RIGHT))
+	) {
+		return TurnSignal.NONE;
+	}
+
+	if ((gridPositionOrigin === GridPosition.BOTTOM && gridPositionTarget === GridPosition.LEFT)
+		|| (gridPositionOrigin === GridPosition.RIGHT && gridPositionTarget === GridPosition.BOTTOM)
+		|| (gridPositionOrigin === GridPosition.TOP && gridPositionTarget === GridPosition.RIGHT
+			|| (gridPositionOrigin === GridPosition.LEFT && gridPositionTarget === GridPosition.TOP))
+	) {
+		return TurnSignal.LEFT;
 	}
 }

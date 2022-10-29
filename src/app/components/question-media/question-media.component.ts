@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Tile} from '../../models/tile';
-import {TileType} from '../../models/tileType.enum';
-import {Rotation} from '../../models/enums/rotation.enum';
 import {SituationService} from '../../services/situation.service';
 import {SubjectTile} from '../../models/subject-tile';
 import {GridPosition} from '../../models/enums/grid-position.enum';
 import {RoadSide} from '../../models/enums/road-side.enum';
+import {generateRoadTiles} from '../../utils/road-utils';
 
 @Component({
 	selector: 'question-media',
@@ -14,22 +13,14 @@ import {RoadSide} from '../../models/enums/road-side.enum';
 })
 export class QuestionMediaComponent implements OnInit {
 
-	Rotations = Rotation;
 	GridPosition = GridPosition;
 	tilesData: Tile[]; //always exactly 9 elements!
 	subjectData: SubjectTile[]; // see above
 
 	constructor(private situationService: SituationService) {}
 
-	// temp:
-	private crossingRoad = [
-		new Tile(TileType.SIDEWALK_CURVED, Rotation.DOWN), 		new Tile(TileType.STOP, Rotation.DOWN), new Tile(TileType.SIDEWALK_CURVED, Rotation.LEFT),
-		new Tile(TileType.STOP, Rotation.RIGHT), 							new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotation.LEFT),
-		new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), 	new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
-	]
-
 	ngOnInit(): void {
-		this.tilesData = this.crossingRoad;
+		this.tilesData = generateRoadTiles(this.situationService.currentSituation);
 
 		this.subjectData = [
 			SubjectTile.createEmpty(), SubjectTile.createEmpty(), SubjectTile.createEmpty(),

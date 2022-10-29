@@ -12,6 +12,8 @@ export class SituationService {
 	// Starting points for situation generation:
 	currentSituation: Situation;
 	questionType: QuestionType;
+	// For testing purposes, usually between 1-3
+	currentDifficulty: number = 1;
 
 	constructor(private rightOfWayService: RightOfWayService) {}
 
@@ -21,7 +23,7 @@ export class SituationService {
 
 	generateNewSituation(): void {
 		this.questionType = QuestionType.DO_QUESTION;
-		this.currentSituation = new Situation();
+		this.currentSituation = new Situation(this.currentDifficulty);
 
 		// Check for main rule giver in the following order: [TrafficLights, TrafficSigns, default: RightOfWay]
 		if(this.questionType === QuestionType.DO_QUESTION) {

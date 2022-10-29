@@ -1,3 +1,5 @@
+import {getRandomIntFromInterval} from './number-utils';
+
 export function removeDuplicatesFilter(value, index, self) {
 	return self.indexOf(value) === index;
 }
@@ -12,4 +14,9 @@ export function removeElementsOfAFromB(arrayA, arrayB) {
 			arrayB.splice(i, 1);
 		}
 	}
+}
+
+
+export function getRandomObjectOfArray<T>(array: T[]): T {
+	return array[getRandomIntFromInterval(0, array.length-1)];
 }

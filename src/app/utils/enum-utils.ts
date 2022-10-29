@@ -1,4 +1,4 @@
-import {randomIntFromInterval} from './number-utils';
+import {getRandomIntFromInterval} from './number-utils';
 
 /**
  * Returns a random enum value of an enum.
@@ -7,6 +7,6 @@ import {randomIntFromInterval} from './number-utils';
  */
 export function randomEnum<T>(anEnum: T, startIndex = 0): T[keyof T] {
 	const enumValues = (Object.values(anEnum) as unknown) as T[keyof T][];
-	const randomIndex = randomIntFromInterval(startIndex, enumValues.length-1);
+	const randomIndex = getRandomIntFromInterval(startIndex, enumValues.length-1);
 	return enumValues[randomIndex];
 }
