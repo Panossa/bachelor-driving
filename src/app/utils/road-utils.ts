@@ -35,44 +35,44 @@ export function haveNoneOnOppositeSiteWhoCanBlock(subject: TrafficSubject, remai
 	);
 }
 
-export function getRoadsideTile(rotation: Rotation): Tile {
+export function generateRoadsideTile(rotation: Rotation = Rotation.RIGHT): Tile {
 	return new Tile(Math.random()<0.5 ? TileType.HOUSE : TileType.SIDEWALK_STRAIGHT, rotation);
 }
 
 export function generateRoadTiles(situation: Situation): Tile[] {
 	if (situation.streetLayout === STREET_LAYOUTS.STRAIGHT_ROAD) {
 		return [
-			new Tile(TileType.SIDEWALK_STRAIGHT), new Tile(TileType.ROAD_STRAIGHT), new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.LEFT),
-			new Tile(TileType.SIDEWALK_STRAIGHT), new Tile(TileType.ROAD_STRAIGHT), new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.LEFT),
-			new Tile(TileType.SIDEWALK_STRAIGHT), new Tile(TileType.ROAD_STRAIGHT), new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.LEFT)
+			generateRoadsideTile(), new Tile(TileType.ROAD_STRAIGHT), generateRoadsideTile(Rotation.LEFT),
+			generateRoadsideTile(), new Tile(TileType.ROAD_STRAIGHT), generateRoadsideTile(Rotation.LEFT),
+			generateRoadsideTile(), new Tile(TileType.ROAD_STRAIGHT), generateRoadsideTile(Rotation.LEFT)
 		];
 	}
 	if (situation.streetLayout === STREET_LAYOUTS.FULL_CROSSING) {
 		return [
-			new Tile(TileType.SIDEWALK_CURVED, Rotation.DOWN), 		new Tile(TileType.STOP, Rotation.DOWN), new Tile(TileType.SIDEWALK_CURVED, Rotation.LEFT),
-			new Tile(TileType.STOP, Rotation.RIGHT), 							new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotation.LEFT),
-			new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), 	new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
+			new Tile(TileType.SIDEWALK_CURVED, Rotation.DOWN), 	new Tile(TileType.STOP, Rotation.DOWN), new Tile(TileType.SIDEWALK_CURVED, Rotation.LEFT),
+			new Tile(TileType.STOP, Rotation.RIGHT), 						new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotation.LEFT),
+			new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
 		];
 	}
 	if (situation.streetLayout === STREET_LAYOUTS.T_CROSSING_LEFT_FORWARD) {
 		return [
-			new Tile(TileType.SIDEWALK_CURVED, Rotation.DOWN), 		new Tile(TileType.STOP, Rotation.DOWN), new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.LEFT),
-			new Tile(TileType.STOP, Rotation.RIGHT), 							new Tile(TileType.ROADWAY), 						new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.LEFT),
-			new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), 	new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.LEFT)
+			new Tile(TileType.SIDEWALK_CURVED, Rotation.DOWN), 	new Tile(TileType.STOP, Rotation.DOWN), generateRoadsideTile(Rotation.LEFT),
+			new Tile(TileType.STOP, Rotation.RIGHT), 						new Tile(TileType.ROADWAY), 						generateRoadsideTile(Rotation.LEFT),
+			new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), new Tile(TileType.STOP, Rotation.UP), 	generateRoadsideTile(Rotation.LEFT)
 		];
 	}
 	if (situation.streetLayout === STREET_LAYOUTS.T_CROSSING_LEFT_RIGHT) {
 		return [
-			new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.DOWN),	new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.DOWN), 	new Tile(TileType.SIDEWALK_STRAIGHT, Rotation.DOWN),
-			new Tile(TileType.STOP, Rotation.RIGHT), 							new Tile(TileType.ROADWAY), 													new Tile(TileType.STOP, Rotation.LEFT),
-			new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), 	new Tile(TileType.STOP, Rotation.UP), 								new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
+			generateRoadsideTile(Rotation.DOWN),								generateRoadsideTile(Rotation.DOWN), 	generateRoadsideTile(Rotation.DOWN),
+			new Tile(TileType.STOP, Rotation.RIGHT), 						new Tile(TileType.ROADWAY), 					new Tile(TileType.STOP, Rotation.LEFT),
+			new Tile(TileType.SIDEWALK_CURVED, Rotation.RIGHT), new Tile(TileType.STOP, Rotation.UP), new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
 		];
 	}
 	if (situation.streetLayout === STREET_LAYOUTS.T_CROSSING_RIGHT_FORWARD) {
 		return [
-			new Tile(TileType.SIDEWALK_STRAIGHT), 	new Tile(TileType.STOP, Rotation.DOWN), new Tile(TileType.SIDEWALK_CURVED, Rotation.LEFT),
-			new Tile(TileType.SIDEWALK_STRAIGHT),		new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotation.LEFT),
-			new Tile(TileType.SIDEWALK_STRAIGHT), 	new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
+			generateRoadsideTile(), 	new Tile(TileType.STOP, Rotation.DOWN), new Tile(TileType.SIDEWALK_CURVED, Rotation.LEFT),
+			generateRoadsideTile(),		new Tile(TileType.ROADWAY), 						new Tile(TileType.STOP, Rotation.LEFT),
+			generateRoadsideTile(), 	new Tile(TileType.STOP, Rotation.UP), 	new Tile(TileType.SIDEWALK_CURVED, Rotation.UP)
 		];
 	}
 	console.error(`Street layout is none of the applicable! Was given: ${situation.streetLayout}`);
