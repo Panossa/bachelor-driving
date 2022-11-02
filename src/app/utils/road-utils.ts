@@ -13,45 +13,38 @@ import {Rotation} from '../models/enums/rotation.enum';
  * @param remainingTrafficSubjects a reference to all remaining traffic subjects on the street
  */
 export function haveNoneOnTheirRightFilter(subject: TrafficSubject, remainingTrafficSubjects: TrafficSubject[]): boolean {
-	switch (subject.gridPosition) {
-		case GridPosition.BOTTOM:
-			// nobody on the right?
-			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.RIGHT);
-		case GridPosition.LEFT:
-			// nobody on the bottom?
-			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.BOTTOM);
-		case GridPosition.RIGHT:
-			// nobody on the top?
-			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.TOP);
-		case GridPosition.TOP:
-			// nobody on the left?
-			return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition === GridPosition.LEFT);
-		default:
-			console.error(`Invalid grid position of traffic subject ${subject} ! Of ${remainingTrafficSubjects}`);
+	if (subject.gridPosition === GridPosition.CENTER) {
+		console.error(`Tried finding right of center! Subject: ${JSON.stringify(subject)} of ${remainingTrafficSubjects}`);
 	}
+	// Find any otherSubject on the right of subject, negate result.
+	return !remainingTrafficSubjects.find(otherSubject => otherSubject.gridPosition == ((subject.gridPosition + 1) % 4));
 }
 
-export function haveNoneOnOppositeSiteWhoWantToDriveForward(subject: TrafficSubject, remainingTrafficSubjects: TrafficSubject[]): boolean {
+/**
+ * Returns true for each subject NOT able to block the way of someone. For subjects coming from the opposite side, they can block a path if they want to turn anywhere but left.
+ */
+export function haveNoneOnOppositeSiteWhoCanBlock(subject: TrafficSubject, remainingTrafficSubjects: TrafficSubject[]): boolean {
+	// TODO use betterMod() with case gridPosition - 2 % 4 to make this a one-liner
 	switch (subject.gridPosition) {
 		case GridPosition.RIGHT:
 			return !remainingTrafficSubjects.find(otherSubject =>
 				otherSubject.gridPosition === GridPosition.LEFT
-				&& otherSubject.turnSignal === TurnSignal.NONE
+				&& otherSubject.turnSignal !== TurnSignal.LEFT
 			);
 		case GridPosition.BOTTOM:
 			return !remainingTrafficSubjects.find(otherSubject =>
 				otherSubject.gridPosition === GridPosition.TOP
-				&& otherSubject.turnSignal === TurnSignal.NONE
+				&& otherSubject.turnSignal !== TurnSignal.LEFT
 			);
 		case GridPosition.LEFT:
 			return !remainingTrafficSubjects.find(otherSubject =>
 				otherSubject.gridPosition === GridPosition.RIGHT
-				&& otherSubject.turnSignal === TurnSignal.NONE
+				&& otherSubject.turnSignal !== TurnSignal.LEFT
 			);
 		case GridPosition.TOP:
 			return !remainingTrafficSubjects.find(otherSubject =>
 				otherSubject.gridPosition === GridPosition.BOTTOM
-				&& otherSubject.turnSignal === TurnSignal.NONE
+				&& otherSubject.turnSignal !== TurnSignal.LEFT
 			);
 		default:
 			console.error(`Invalid grid position of traffic subject ${subject}`);

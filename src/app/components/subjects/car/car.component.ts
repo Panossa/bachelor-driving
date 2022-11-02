@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {GridPosition} from '../../../models/enums/grid-position.enum';
 import {HSLColor} from '../../../models/hsl-color';
+import {TurnSignal} from '../../../models/enums/turn-signal.enum';
 
 @Component({
 	selector: 'subject-car',
@@ -11,6 +12,8 @@ export class CarComponent implements OnInit {
 
 	@Input()
 	gridPosition: GridPosition;
+	@Input()
+	turnSignal: TurnSignal = TurnSignal.NONE;
 	@Input()
 	baseColor: HSLColor = HSLColor.of(0, 0, 100);
 
@@ -37,6 +40,14 @@ export class CarComponent implements OnInit {
 			default:
 				console.error(`Car's been initialized without correct gridPosition. Given: ${this.gridPosition}`);
 		}
+	}
+
+	shouldShowRightTurn(): boolean {
+		return this.turnSignal === TurnSignal.RIGHT || this.turnSignal === TurnSignal.BOTH;
+	}
+
+	shouldShowLeftTurn(): boolean {
+		return this.turnSignal === TurnSignal.LEFT || this.turnSignal === TurnSignal.BOTH;
 	}
 
 }

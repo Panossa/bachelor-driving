@@ -10,12 +10,12 @@
 				<!--	Car placeholder 1	-->
 				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM])"
 						 [class.horizontal-subject]="isOnGridPositions(subjectData[i], [GridPosition.LEFT, GridPosition.RIGHT])">
-					<subject-car *ngIf="subjectData[i].trafficSubject1 != null" [gridPosition]="subjectData[i].trafficSubject1?.gridPosition"></subject-car>
+					<subject-car *ngIf="subjectData[i].trafficSubject1 != null" [gridPosition]="subjectData[i].trafficSubject1?.gridPosition" [turnSignal]="subjectData[i].trafficSubject1.turnSignal"></subject-car>
 				</div>
 				<!--	Car placeholder 2	-->
 				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM])"
 						 [class.horizontal-subject]="isOnGridPositions(subjectData[i], [GridPosition.LEFT, GridPosition.RIGHT])">
-					<subject-car *ngIf="subjectData[i].trafficSubject2 != null" [gridPosition]="subjectData[i].trafficSubject2?.gridPosition"></subject-car>
+					<subject-car *ngIf="subjectData[i].trafficSubject2 != null" [gridPosition]="subjectData[i].trafficSubject2?.gridPosition" [turnSignal]="subjectData[i].trafficSubject2.turnSignal"></subject-car>
 				</div>
 			</div>
 		</div>

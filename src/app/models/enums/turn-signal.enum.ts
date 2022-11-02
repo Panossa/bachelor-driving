@@ -1,4 +1,5 @@
 import {GridPosition} from './grid-position.enum';
+import {betterMod} from '../../utils/number-utils';
 
 export enum TurnSignal {
 	NONE,
@@ -8,28 +9,16 @@ export enum TurnSignal {
 }
 
 export function mapGridPositionsToTurnSignal(gridPositionOrigin: GridPosition, gridPositionTarget: GridPosition): TurnSignal {
-	console.log(`Mapping grid positions ${gridPositionOrigin} and ${gridPositionTarget} to turn signal`);
-	if ((gridPositionOrigin === GridPosition.BOTTOM && gridPositionTarget === GridPosition.RIGHT)
-		|| (gridPositionOrigin === GridPosition.RIGHT && gridPositionTarget === GridPosition.TOP)
-		|| (gridPositionOrigin === GridPosition.TOP && gridPositionTarget === GridPosition.LEFT
-		|| (gridPositionOrigin === GridPosition.LEFT && gridPositionTarget === GridPosition.BOTTOM))
-	) {
-		return TurnSignal.RIGHT;
-	}
-
-	if ((gridPositionOrigin === GridPosition.BOTTOM && gridPositionTarget === GridPosition.TOP)
-		|| (gridPositionOrigin === GridPosition.TOP && gridPositionTarget === GridPosition.BOTTOM
-		|| (gridPositionOrigin === GridPosition.RIGHT && gridPositionTarget === GridPosition.LEFT)
-			|| (gridPositionOrigin === GridPosition.LEFT && gridPositionTarget === GridPosition.RIGHT))
-	) {
+	if (gridPositionOrigin === GridPosition.CENTER || gridPositionTarget === GridPosition.CENTER) {
+		console.error("Tried mapping unsupported gridPosition to TurnSignal!");
 		return TurnSignal.NONE;
 	}
 
-	if ((gridPositionOrigin === GridPosition.BOTTOM && gridPositionTarget === GridPosition.LEFT)
-		|| (gridPositionOrigin === GridPosition.RIGHT && gridPositionTarget === GridPosition.BOTTOM)
-		|| (gridPositionOrigin === GridPosition.TOP && gridPositionTarget === GridPosition.RIGHT
-			|| (gridPositionOrigin === GridPosition.LEFT && gridPositionTarget === GridPosition.TOP))
-	) {
+	if (gridPositionTarget == betterMod(gridPositionOrigin - 1, 4)) {
 		return TurnSignal.LEFT;
 	}
+	if (gridPositionTarget == betterMod(gridPositionOrigin + 1, 4)) {
+		return TurnSignal.RIGHT;
+	}
+	return TurnSignal.NONE;
 }

@@ -4,7 +4,7 @@ import {DoAnswer} from '../models/enums/do-answer.enum';
 import {RoadSide} from '../models/enums/road-side.enum';
 import {TurnSignal} from '../models/enums/turn-signal.enum';
 import {removeElementsOfAFromB} from '../utils/array-utils';
-import {haveNoneOnOppositeSiteWhoWantToDriveForward, haveNoneOnTheirRightFilter} from '../utils/road-utils';
+import {haveNoneOnOppositeSiteWhoCanBlock, haveNoneOnTheirRightFilter} from '../utils/road-utils';
 import {Situation} from '../models/situation';
 
 /**
@@ -90,36 +90,36 @@ export class RightOfWayService {
 		const originalTrafficSubjectCount = trafficSubjects.length;
 		for (let i = 0; i < originalTrafficSubjectCount && trafficSubjects.length > 0; i++) {
 			// 1. First go those who want to go to their right
-			let parallelDrivingSubjects = trafficSubjects.filter(subject => subject.turnSignal === TurnSignal.RIGHT);
-			console.log(`1. Remaining after "right": ${JSON.stringify(parallelDrivingSubjects)}`);
+			let simultaneouslyDrivingSubjects = trafficSubjects.filter(subject => subject.turnSignal === TurnSignal.RIGHT);
+			console.log(`1. Remaining after "right": ${JSON.stringify(simultaneouslyDrivingSubjects)}`);
 
 			// 2. Then go those who want to drive forward and have no one on their right.
-			parallelDrivingSubjects = parallelDrivingSubjects.concat(
+			simultaneouslyDrivingSubjects = simultaneouslyDrivingSubjects.concat(
 				trafficSubjects
 					// ...who want to drive forward
 					.filter(subject => subject.turnSignal === TurnSignal.NONE)
 					// & who have no one on their right
 					.filter((subject) => haveNoneOnTheirRightFilter(subject, trafficSubjects))
 			);
-			console.log(`2. Remaining after "forward & none on right": ${JSON.stringify(parallelDrivingSubjects)}`);
+			console.log(`2. Remaining after "forward & none on right": ${JSON.stringify(simultaneouslyDrivingSubjects)}`);
 
 			// 3. Finally, those who want to drive left and have nobody on their right, as well as nobody blocking from the opposite site.
 			// Theoretically, this only needs to be tested once.
-			parallelDrivingSubjects = parallelDrivingSubjects.concat(trafficSubjects
+			simultaneouslyDrivingSubjects = simultaneouslyDrivingSubjects.concat(trafficSubjects
 				// ...who want to drive left
 				.filter(subject => subject.turnSignal === TurnSignal.LEFT)
 				// & who have no one on their right
 				.filter((subject) => haveNoneOnTheirRightFilter(subject, trafficSubjects))
-				// & who have no one on the opposite site who wants to go forward (or right, but we already checked that above)
-				.filter((subject: TrafficSubject) => haveNoneOnOppositeSiteWhoWantToDriveForward(subject, trafficSubjects))
+				// & who have no one on the opposite site who wants to go forward or right
+				.filter((subject: TrafficSubject) => haveNoneOnOppositeSiteWhoCanBlock(subject, trafficSubjects))
 			);
-			console.log(`3. Remaining after "left & none on right & none opposite forward": ${JSON.stringify(parallelDrivingSubjects)}`);
+			console.log(`3. Remaining after "left & none on right & none opposite forward": ${JSON.stringify(simultaneouslyDrivingSubjects)}`);
 
 			// Add all subjects who can drive in this iteration to the result order.
-			if(parallelDrivingSubjects.length > 0) {
-				rightOfWayOrder.push(parallelDrivingSubjects);
+			if(simultaneouslyDrivingSubjects.length > 0) {
+				rightOfWayOrder.push(simultaneouslyDrivingSubjects);
 				// Remove those from the further equation:
-				removeElementsOfAFromB(parallelDrivingSubjects, trafficSubjects);
+				removeElementsOfAFromB(simultaneouslyDrivingSubjects, trafficSubjects);
 			} else {
 				console.error(`Check what happened in the RightOfWay calculations. Remaining traffic subjects: ${JSON.stringify(trafficSubjects)}`);
 			}
