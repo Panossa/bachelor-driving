@@ -76,8 +76,9 @@ export class RightOfWayService {
 			&& subject.turnSignal !== TurnSignal.RIGHT
 		).length;
 
-		// Check roadCount against subjects waiting to go right. (In this simulation only one can wait per street.)
-		if (situation.streetLayout.roadCount === waitingTrafficSubjects) {
+		// Check roadCount against subjects waiting to go right. 4 = full crossing.
+		// T crossing can't have stalemates. And in this simulation only one subject can wait per street.
+		if (situation.streetLayout.roadCount === waitingTrafficSubjects && situation.streetLayout.roadCount === 4) {
 			// Nobody can drive, result is empty!
 			console.log(`Stalemate! Road count: ${situation.streetLayout.roadCount}. Subjects waiting for their turn who don't want to go right: ${waitingTrafficSubjects}.\nRoad count == waitingTrafficSubjects => Stalemate.`);
 			return [];

@@ -1,6 +1,5 @@
 # Todo
 
-- Fix stalemate. It only exists if there are 4 roads. Otherwise, the right most subject starts.
 - situation.ts:53 make sure at least three roads are used... unless it's a straight road!
 - As a simple second rule set, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
 - Do circs really need "needsRoadForward", "needsRoadLeft" and "needsRoadRight"? They could be inferred from subjects' turn signals and grid positions
