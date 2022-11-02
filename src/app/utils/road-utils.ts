@@ -6,6 +6,7 @@ import {Tile} from '../models/tile';
 import {STREET_LAYOUTS} from '../models/street-layout';
 import {TileType} from '../models/tile-type.enum';
 import {Rotation} from '../models/enums/rotation.enum';
+import {betterMod} from './number-utils';
 
 /**
  * Used in filter() methods to only return subjects who have no one on their right on the grid.
@@ -24,31 +25,14 @@ export function haveNoneOnTheirRightFilter(subject: TrafficSubject, remainingTra
  * Returns true for each subject NOT able to block the way of someone. For subjects coming from the opposite side, they can block a path if they want to turn anywhere but left.
  */
 export function haveNoneOnOppositeSiteWhoCanBlock(subject: TrafficSubject, remainingTrafficSubjects: TrafficSubject[]): boolean {
-	// TODO use betterMod() with case gridPosition - 2 % 4 to make this a one-liner
-	switch (subject.gridPosition) {
-		case GridPosition.RIGHT:
-			return !remainingTrafficSubjects.find(otherSubject =>
-				otherSubject.gridPosition === GridPosition.LEFT
-				&& otherSubject.turnSignal !== TurnSignal.LEFT
-			);
-		case GridPosition.BOTTOM:
-			return !remainingTrafficSubjects.find(otherSubject =>
-				otherSubject.gridPosition === GridPosition.TOP
-				&& otherSubject.turnSignal !== TurnSignal.LEFT
-			);
-		case GridPosition.LEFT:
-			return !remainingTrafficSubjects.find(otherSubject =>
-				otherSubject.gridPosition === GridPosition.RIGHT
-				&& otherSubject.turnSignal !== TurnSignal.LEFT
-			);
-		case GridPosition.TOP:
-			return !remainingTrafficSubjects.find(otherSubject =>
-				otherSubject.gridPosition === GridPosition.BOTTOM
-				&& otherSubject.turnSignal !== TurnSignal.LEFT
-			);
-		default:
-			console.error(`Invalid grid position of traffic subject ${subject}`);
+	if (subject.gridPosition === GridPosition.CENTER) {
+		console.error('Subject has invalid GridPosition of CENTER');
+		return false;
 	}
+	return !remainingTrafficSubjects.find(otherSubject =>
+		otherSubject.turnSignal !== TurnSignal.LEFT
+		&& otherSubject.gridPosition === betterMod(subject.gridPosition - 2, 4)
+	);
 }
 
 export function getRoadsideTile(rotation: Rotation): Tile {
