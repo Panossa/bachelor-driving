@@ -1,7 +1,7 @@
 <div class="question-wrapper">
 	<div class="question-header">
-		<div class="mat-display-2">{{questionTitle}}</div>
-		<div class="mat-display-2">Punkte: {{points}}</div>
+		<div class="mat-display-1">{{questionTitle}}</div>
+		<div class="mat-display-1">Punkte: {{points}}</div>
 	</div>
 
 	<div class="question-content">
@@ -32,12 +32,17 @@
 		</button>
 		<button
 			mat-raised-button
-			(click)="toggleInfoCard()">
+			[disabled]="!isSolutionShown"
+			(click)="toggleInfoCard()"
+		>
 			Erklärung
 		</button>
 		<button
 			color="{{isSolutionShown ? 'primary' : ''}}"
-			mat-raised-button>
+			mat-raised-button
+			[disabled]="!isSolutionShown"
+			(click)="reload()"
+		>
 			Weiter
 		</button>
 	</div>
