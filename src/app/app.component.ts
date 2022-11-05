@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SituationService} from './services/situation.service';
+import {Situation} from './models/situation';
 
 @Component({
 	selector: 'app-root',
@@ -17,5 +18,9 @@ export class AppComponent implements OnInit{
 
 	reload(): void {
 		window.location.reload();
+	}
+
+	getCurrentSituation(): Situation {
+		return this.situationService.currentSituation;
 	}
 }

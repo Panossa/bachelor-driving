@@ -1,26 +1,29 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Tile} from '../../models/tile';
-import {SituationService} from '../../services/situation.service';
 import {SubjectTile} from '../../models/subject-tile';
 import {GridPosition} from '../../models/enums/grid-position.enum';
 import {RoadSide} from '../../models/enums/road-side.enum';
 import {generateRoadTiles} from '../../utils/road-utils';
+import {Situation} from '../../models/situation';
 
 @Component({
 	selector: 'question-media',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	templateUrl: './question-media.component.html',
 	styleUrls: ['./question-media.component.css']
 })
-export class QuestionMediaComponent implements OnInit {
+export class QuestionMediaComponent implements OnInit, OnChanges {
+
+	// This could maybe be gotten with better performance via custom event emitter and subscribes but it works.
+	@Input()
+	situation: Situation;
 
 	GridPosition = GridPosition;
 	tilesData: Tile[]; //always exactly 9 elements!
 	subjectData: SubjectTile[]; // see above
 
-	constructor(private situationService: SituationService) {}
-
 	ngOnInit(): void {
-		this.tilesData = generateRoadTiles(this.situationService.currentSituation);
+		this.tilesData = generateRoadTiles(this.situation);
 
 		this.subjectData = [
 			SubjectTile.createEmpty(), SubjectTile.createEmpty(), SubjectTile.createEmpty(),
@@ -28,8 +31,7 @@ export class QuestionMediaComponent implements OnInit {
 			SubjectTile.createEmpty(), SubjectTile.createEmpty(), SubjectTile.createEmpty()
 		];
 
-		const trafficSubjects = [...this.situationService.currentSituation.trafficSubjects, this.situationService.currentSituation.oneself];
-		trafficSubjects.forEach(subject => {
+		[...this.situation.trafficSubjects, this.situation.oneself].forEach(subject => {
 			// check grid position and road side
 			/* Positions/indices:
 			 * 0,1,2
@@ -70,6 +72,10 @@ export class QuestionMediaComponent implements OnInit {
 				default: console.error("A subject has an invalid grid position!");
 			}
 		});
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		this.ngOnInit();
 	}
 
 	isOnGridPosition(subjectTile: SubjectTile, gridPosition: GridPosition): boolean {

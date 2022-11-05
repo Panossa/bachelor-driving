@@ -15,14 +15,19 @@ export class QuestionAreaComponent implements OnInit {
 	points: number = 1;
 	answers: Answer[];
 
-	isSolutionShown: boolean = false;
-	isInfoCardShown: boolean = false;
+	isSolutionShown: boolean;
+	isInfoCardShown: boolean;
+
+	private pickedAnswerIndexes: [boolean, boolean, boolean];
 
 	constructor(private situationService: SituationService) {}
 
 	ngOnInit(): void {
 		const situationAnswers = this.situationService.currentSituation.answers;
 		const correctAnswers = this.situationService.currentSituation.correctAnswers;
+		this.isSolutionShown = false;
+		this.isInfoCardShown = false;
+		this.pickedAnswerIndexes = [false, false, false];
 
 		// Update title according to the type of answers we're showing.
 		if (Object.values(DoAnswer).includes(situationAnswers[0])) {
@@ -41,7 +46,12 @@ export class QuestionAreaComponent implements OnInit {
 	}
 
 	registerSolution(answerIndex: number): void {
+		if (this.isSolutionShown) return;
+
 		console.log("Answered with: " + answerIndex);
+		this.pickedAnswerIndexes[answerIndex] = !this.pickedAnswerIndexes[answerIndex];
+
+		console.log(`pickedAnswers: ${this.pickedAnswerIndexes}`);
 	}
 
 	toggleInfoCard(): void {
@@ -54,8 +64,9 @@ export class QuestionAreaComponent implements OnInit {
 		console.log('answers submitted');
 	}
 
-	reload(): void {
-		window.location.reload();
+	nextQuestion(): void {
+		this.situationService.generateNewSituation();
+		// This could also be done via ngOnChanges, but it's worse for performance so OnInit must do. Best way would be to set up own listeners.
+		this.ngOnInit();
 	}
-
 }

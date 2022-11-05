@@ -1,15 +1,17 @@
 # Todo
 
 Urgent:
-- Add rule set/questions/answers for straight roads. Can't ask right of way if there is no right.
-  - Skip TurnSignal calculation for straight roads. There is no escape. 
-  - allow straight roads to generate cars in CENTER for more variable questions? Right of way shouldn't get confused.
+- Add actual loading of a next question
 - Apply difficulty:
-  - number of cars (circumstances)
-  - chances of getting full crossings rather than straight roads or T crossings
+	- number of cars (circumstances)
+	- chances of getting full crossings rather than straight roads or T crossings
+- Add rule set/questions/answers for straight roads. Can't ask right of way if there is no right.
+	- Skip TurnSignal calculation for straight roads. There is no escape. 
+	- allow straight roads to generate cars in CENTER for more variable questions? Right of way shouldn't get confused.
 - As a simple second rule set, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
 - In case there are more than 3 possible answers, choose 3 randomly. In case there are less than 3, take as many as possible.
 - situation.service.ts: Other rule systems, no only DO_QUESTION.
+- Add hint texts!
 
 Nice to have:
 - Allow cars of different colors

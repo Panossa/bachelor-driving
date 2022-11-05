@@ -7,10 +7,12 @@
 	<div class="question-content">
 		<div class="answers">
 			<div *ngFor="let answer of answers; let i = index">
-				<h1>
-					<mat-checkbox (click)="registerSolution(i)" color="primary" [class.checkbox-disabled]="isSolutionShown"> </mat-checkbox>
+				<h1 class="unselectable-text">
+					<mat-checkbox (change)="registerSolution(i)" id="{{'answer' + i}}" color="primary" [class.checkbox-disabled]="isSolutionShown"> </mat-checkbox>
 					<mat-checkbox *ngIf="isSolutionShown" color="warn" class="checkbox-disabled" [checked]="answer.isCorrect"> </mat-checkbox>
-					{{answer.answerText}}
+					<!-- Sadly, Angular checkboxes are compiled into <label>s with <input>s inside of them, which is definitely non-standard -->
+					<!-- For their internal labels, they use the ID I set for the mat-checkbox and append -input. So I use that. -->
+					<label for="{{'answer' + i + '-input'}}">{{answer.answerText}}</label>
 				</h1>
 			</div>
 		</div>
@@ -41,7 +43,7 @@
 			color="{{isSolutionShown ? 'primary' : ''}}"
 			mat-raised-button
 			[disabled]="!isSolutionShown"
-			(click)="reload()"
+			(click)="nextQuestion()"
 		>
 			Weiter
 		</button>

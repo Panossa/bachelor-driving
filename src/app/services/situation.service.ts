@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Situation} from '../models/situation';
-import {DoAnswer} from '../models/enums/do-answer.enum';
 import {RightOfWayService} from './right-of-way.service';
 import {QuestionType} from '../models/enums/question-type.enum';
 
@@ -16,10 +15,6 @@ export class SituationService {
 	currentDifficulty: number = 1;
 
 	constructor(private rightOfWayService: RightOfWayService) {}
-
-	get answers(): DoAnswer[] {
-		return this.currentSituation.answers;
-	}
 
 	generateNewSituation(): void {
 		this.questionType = QuestionType.DO_QUESTION;
