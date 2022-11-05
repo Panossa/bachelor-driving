@@ -48,6 +48,7 @@ mat-card-content {
 }
 
 .action-buttons {
+	margin-top: 2rem;
 	display: flex;
 	justify-content: space-around;
 }
