@@ -122,7 +122,7 @@ export class RightOfWayService {
 				// Remove those from the further equation:
 				removeElementsOfAFromB(simultaneouslyDrivingSubjects, trafficSubjects);
 			} else {
-				console.error(`Check what happened in the RightOfWay calculations. Remaining traffic subjects: ${JSON.stringify(trafficSubjects)}`);
+				console.warn(`Check what happened in the RightOfWay calculations. Remaining traffic subjects: ${JSON.stringify(trafficSubjects)}`);
 			}
 		}
 
@@ -132,12 +132,14 @@ export class RightOfWayService {
 			0
 		);
 		if(trafficSubjects.length !== 0 || orderedSubjectsCount !== totalTrafficSubjectCount) {
-			console.error(`The amount of ordered (${orderedSubjectsCount}) and unordered (${totalTrafficSubjectCount}) subjects is not the same!
-											\nMaybe send the rest in a last array element? \nRemaining traffic subjects: ${trafficSubjects.length}`);
+			console.warn(`Potential problem: The amount of ordered (${orderedSubjectsCount}) and unordered (${totalTrafficSubjectCount}) subjects is not the same!
+			 \nRemaining traffic subjects: ${trafficSubjects.length} \nWill return stalemate as fallback.`);
 		}
 		console.log('Right of way array: ' + JSON.stringify(rightOfWayOrder));
 		console.log('Traffic subjects: ' + JSON.stringify(trafficSubjects));
 
+		// This will either return a valid order or an empty array in case no order can be found (Stalemate).
+		// Afaik this happens only with strange T-crossings.
 		return rightOfWayOrder;
 	}
 
