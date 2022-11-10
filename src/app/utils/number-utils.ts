@@ -1,10 +1,20 @@
 /**
- * Generates random number in an interval
+ * Generates random INTEGER in an interval
  * @param min Minimum, incl.
  * @param max Maximum, incl.
  */
-export function getRandomIntFromInterval(min, max) {
-	return Math.floor(Math.random() * (max - min + 1) + min)
+export function getRandomIntFromInterval(min: number, max: number): number {
+	return Math.floor(getRandomDoubleFromInterval(min, max));
+}
+
+/**
+ * Generates random DOUBLE in an interval
+ * @param min Minimum, incl.
+ * @param max Maximum, incl.
+ */
+export function getRandomDoubleFromInterval(min: number, max: number): number {
+	const temp = Math.random() * (max - min + 1) + min;
+	return Math.min(max, temp);
 }
 
 /**
@@ -14,4 +24,8 @@ export function getRandomIntFromInterval(min, max) {
  */
 export function betterMod(n, m): number {
 	return ((n % m) + m) % m;
+}
+
+export function clamp(number, min, max) {
+	return Math.max(min, Math.min(number, max));
 }

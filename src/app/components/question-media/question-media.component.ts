@@ -14,7 +14,7 @@ import {Situation} from '../../models/situation';
 })
 export class QuestionMediaComponent implements OnInit, OnChanges {
 
-	// This could maybe be gotten with better performance via custom event emitter and subscribes but it works.
+	// This could maybe be gotten with better performance via custom event emitter and subscribes, but it works.
 	@Input()
 	situation: Situation;
 

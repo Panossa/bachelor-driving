@@ -18,7 +18,7 @@ export class QuestionAreaComponent implements OnInit {
 	isSolutionShown: boolean;
 	isInfoCardShown: boolean;
 
-	private pickedAnswerIndexes: [boolean, boolean, boolean];
+	private pickedAnswers: boolean[];
 
 	constructor(private situationService: SituationService) {}
 
@@ -27,7 +27,6 @@ export class QuestionAreaComponent implements OnInit {
 		const correctAnswers = this.situationService.currentSituation.correctAnswers;
 		this.isSolutionShown = false;
 		this.isInfoCardShown = false;
-		this.pickedAnswerIndexes = [false, false, false];
 
 		// Update title according to the type of answers we're showing.
 		if (Object.values(DoAnswer).includes(situationAnswers[0])) {
@@ -39,6 +38,8 @@ export class QuestionAreaComponent implements OnInit {
 			new Answer(this.generateAnswerText(situationAnswers[1]), correctAnswers.includes(situationAnswers[1])),
 			new Answer(this.generateAnswerText(situationAnswers[2]), correctAnswers.includes(situationAnswers[2]))
 		];
+		// initialize pickedAnswers with a boolean array full of false for every possible answer
+		this.pickedAnswers = this.answers.map(_ => false);
 	}
 
 	generateAnswerText(answer): string {
@@ -49,19 +50,22 @@ export class QuestionAreaComponent implements OnInit {
 		if (this.isSolutionShown) return;
 
 		console.log("Answered with: " + answerIndex);
-		this.pickedAnswerIndexes[answerIndex] = !this.pickedAnswerIndexes[answerIndex];
+		this.pickedAnswers[answerIndex] = !this.pickedAnswers[answerIndex];
 
-		console.log(`pickedAnswers: ${this.pickedAnswerIndexes}`);
+		console.log(`pickedAnswers: ${this.pickedAnswers}`);
 	}
 
 	toggleInfoCard(): void {
 		this.isInfoCardShown = !this.isInfoCardShown;
-		console.log('toggling infocard to ' + this.isInfoCardShown);
+		console.log('toggling info card to ' + this.isInfoCardShown);
 	}
 
 	submitAnswers(): void {
 		this.isSolutionShown = true;
-		console.log('answers submitted');
+		const correctAnswers = this.answers.filter(answer => answer.isCorrect);
+		// Check that for every picked answer, the correct answers include said answer. Similarly, all NOT picked answers should not be part of the correct answer.
+		const allAnswersCorrect = this.pickedAnswers.every((answerPicked, index) => (answerPicked && correctAnswers.includes(this.answers[index])) || (!answerPicked && !correctAnswers.includes(this.answers[index])));
+		this.situationService.updateDifficulty(allAnswersCorrect);
 	}
 
 	nextQuestion(): void {
