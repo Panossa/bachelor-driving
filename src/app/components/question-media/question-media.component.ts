@@ -55,6 +55,13 @@ export class QuestionMediaComponent implements OnInit, OnChanges {
 						this.subjectData[3].trafficSubject2 = subject;
 					}
 					break;
+				case GridPosition.CENTER:
+					if (subject.orientation === RoadSide.OPPOSITE_DIRECTION) {
+						this.subjectData[4].trafficSubject1 = subject;
+					} else {
+						this.subjectData[4].trafficSubject2 = subject;
+					}
+					break;
 				case GridPosition.RIGHT:
 					if (subject.orientation === RoadSide.OPPOSITE_DIRECTION) {
 						this.subjectData[5].trafficSubject1 = subject;

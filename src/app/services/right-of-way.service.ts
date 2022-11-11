@@ -6,16 +6,17 @@ import {TurnSignal} from '../models/enums/turn-signal.enum';
 import {removeElementsOfAFromB} from '../utils/array-utils';
 import {haveNoneOnOppositeSiteWhoCanBlock, haveNoneOnTheirRightFilter} from '../utils/road-utils';
 import {Situation} from '../models/situation';
+import {RuleCalculator} from './rule-calculator';
 
 /**
  * This probably doesn't need to be a service after all, but it might grow in complexity later.
+ * E.g. it might convert some situation data for local use and save it here, making it bigger than a util.
  */
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
-export class RightOfWayService {
-
-	readonly possibleDoAnswers: DoAnswer[] = [
+export class RightOfWayService implements RuleCalculator {
+	possibleDoAnswers = [
 		DoAnswer.STAY,
 		DoAnswer.START_DRIVING,
 		DoAnswer.STALEMATE
@@ -26,21 +27,13 @@ export class RightOfWayService {
 		if (orderedTrafficSubjects.length === 0) {
 			return [DoAnswer.STALEMATE];
 		} else {
-			if(orderedTrafficSubjects[0].includes(situation.oneself)){
+			if (orderedTrafficSubjects[0].includes(situation.oneself)) {
 				return [DoAnswer.START_DRIVING];
 			} else {
 				return [DoAnswer.STAY];
 			}
 		}
 	}
-
-	// calculateCorrectCheckAnswers(): CheckAnswer[] {
-	// 	return null;
-	// }
-
-	// calculateCorrectExpectAnswers(): ExpectAnswers[] {
-	// 	return null
-	// }
 
 	/**
 	 * Example:
@@ -62,7 +55,7 @@ export class RightOfWayService {
 		const totalTrafficSubjectCount = trafficSubjects.length;
 
 		// Edge case 1 of 2: If there is only the user on the road, the right of way is clear.
-		if(totalTrafficSubjectCount <= 1) {
+		if (totalTrafficSubjectCount <= 1) {
 			return [[situation.oneself]];
 		}
 
@@ -117,7 +110,7 @@ export class RightOfWayService {
 			console.log(`3. Remaining after "left & none on right & none opposite forward": ${JSON.stringify(simultaneouslyDrivingSubjects)}`);
 
 			// Add all subjects who can drive in this iteration to the result order.
-			if(simultaneouslyDrivingSubjects.length > 0) {
+			if (simultaneouslyDrivingSubjects.length > 0) {
 				rightOfWayOrder.push(simultaneouslyDrivingSubjects);
 				// Remove those from the further equation:
 				removeElementsOfAFromB(simultaneouslyDrivingSubjects, trafficSubjects);
@@ -131,7 +124,7 @@ export class RightOfWayService {
 			(previousSubjectCount, currentSubjectArray) => previousSubjectCount + currentSubjectArray.length,
 			0
 		);
-		if(trafficSubjects.length !== 0 || orderedSubjectsCount !== totalTrafficSubjectCount) {
+		if (trafficSubjects.length !== 0 || orderedSubjectsCount !== totalTrafficSubjectCount) {
 			console.warn(`Potential problem: The amount of ordered (${orderedSubjectsCount}) and unordered (${totalTrafficSubjectCount}) subjects is not the same!
 			 \nRemaining traffic subjects: ${trafficSubjects.length} \nWill return stalemate as fallback.`);
 		}

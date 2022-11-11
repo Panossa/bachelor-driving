@@ -12,9 +12,10 @@ export class Circumstance {
 	readonly trafficSubjects: TrafficSubject[];
 	// readonly trafficHazards etc. could be added here.
 
-	constructor(hasRoadForward: boolean, hasRoadLeft: boolean, hasRoadRight: boolean, gridPosition: GridPosition) {
-		this.id = String(Math.random()).substring(2,5);
-
+	/**
+	 * Constructor for anything except a straight road.
+	 */
+	static generateForCrossing(hasRoadForward: boolean, hasRoadLeft: boolean, hasRoadRight: boolean, gridPosition: GridPosition): Circumstance {
 		// Find out which direction a subject wants to go in
 		// Collect all possible directions
 		const possibleTurnSignals: TurnSignal[] = [];
@@ -33,12 +34,30 @@ export class Circumstance {
 
 		const turnSignal = getRandomObjectOfArray(possibleTurnSignals);
 
-		this.trafficSubjects = [{
-			type: TrafficSubjectTypes.CAR,
-			gridPosition: gridPosition,
-			orientation: RoadSide.OPPOSITE_DIRECTION,
-			turnSignal: turnSignal
-		}];
+		return {
+			id: String(Math.random()).substring(2,5),
+			trafficSubjects: [{
+				type: TrafficSubjectTypes.CAR,
+				gridPosition: gridPosition,
+				orientation: RoadSide.OPPOSITE_DIRECTION,
+				turnSignal: turnSignal
+			}]
+		};
+	}
+
+	/**
+	 * Constructor for a straight road.
+	 */
+	static generateForStraightRoad(gridPosition: GridPosition, roadSide: RoadSide) {
+		return {
+			id: String(Math.random()).substring(2,5),
+			trafficSubjects: [{
+				type: TrafficSubjectTypes.CAR,
+				gridPosition: gridPosition,
+				orientation: roadSide,
+				turnSignal: TurnSignal.NONE // This can be randomly generated as BOTH in the future.
+			}]
+		}
 	}
 
 	static generateDemoCircumstance(): Circumstance {

@@ -34,9 +34,7 @@ export class QuestionAreaComponent implements OnInit {
 		}
 
 		this.answers = [
-			new Answer(this.generateAnswerText(situationAnswers[0]), correctAnswers.includes(situationAnswers[0])),
-			new Answer(this.generateAnswerText(situationAnswers[1]), correctAnswers.includes(situationAnswers[1])),
-			new Answer(this.generateAnswerText(situationAnswers[2]), correctAnswers.includes(situationAnswers[2]))
+			...situationAnswers.map(doAnswer => new Answer(this.generateAnswerText(doAnswer), correctAnswers.includes(doAnswer)))
 		];
 		// initialize pickedAnswers with a boolean array full of false for every possible answer
 		this.pickedAnswers = this.answers.map(_ => false);

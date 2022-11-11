@@ -7,7 +7,7 @@ import {TrafficSubject} from './traffic-subject';
 import {TrafficSubjectTypes} from './enums/traffic-subject-type.enum';
 import {STREET_LAYOUTS, StreetLayout} from './street-layout';
 import {getRandomObjectOfArray} from '../utils/array-utils';
-import {clamp} from '../utils/number-utils';
+import {clamp, getRandomDoubleFromInterval} from '../utils/number-utils';
 import {getWeightedRandomElement, WeightedObject} from '../utils/random-utils';
 
 export class Situation {
@@ -33,8 +33,8 @@ export class Situation {
 
 		// Define which type of road we're dealing with, from a list of possible ones.
 		this.streetLayout = getWeightedRandomElement([
-			// Straight roads are currently not supported. TODO
-			new WeightedObject(STREET_LAYOUTS.STRAIGHT_ROAD, 0),
+			// Straight roads have a completely different rule set.
+			new WeightedObject(STREET_LAYOUTS.STRAIGHT_ROAD, 1),
 			// The higher the difficulty the more full crossings are generated. This happens based on the expectancy full crossings are more difficult.
 			new WeightedObject(STREET_LAYOUTS.FULL_CROSSING, difficulty*2),
 			new WeightedObject(STREET_LAYOUTS.T_CROSSING_RIGHT_FORWARD, 1),
@@ -54,6 +54,21 @@ export class Situation {
 			possibleTargetGridPositions.push(GridPosition.TOP);
 		}
 
+		let possibleSubjectGridPositions = [];
+		if (this.streetLayout === STREET_LAYOUTS.STRAIGHT_ROAD) {
+			// One possible grid position is missing: BOTTOM + OPPOSITE_DIRECTION, which is the user itself. See oneself for more info.
+			// Another is missing: CENTER + TRAVEL_DIRECTION. Because that one is mandatory (for now!) and will be added anyway.
+			possibleSubjectGridPositions = [
+				{gridPosition: GridPosition.TOP, roadSide: RoadSide.TRAVEL_DIRECTION},
+				{gridPosition: GridPosition.TOP, roadSide: RoadSide.OPPOSITE_DIRECTION},
+				{gridPosition: GridPosition.CENTER, roadSide: RoadSide.OPPOSITE_DIRECTION},
+				{gridPosition: GridPosition.BOTTOM, roadSide: RoadSide.TRAVEL_DIRECTION}
+			];
+		} else {
+			// Since there can only be cars on the opposite side of a crossing, it's okay to just copy the data here.
+			possibleTargetGridPositions.forEach(pos => possibleSubjectGridPositions.push({gridPosition: pos, roadSide: RoadSide.OPPOSITE_DIRECTION}));
+		}
+
 		this.oneself = {
 			type: TrafficSubjectTypes.CAR,
 			// viewed from a central perspective, the user is on the opposite driving direction for everyone involved
@@ -66,20 +81,40 @@ export class Situation {
 		// The upper limit can be higher if enough circumstance types are defined,
 		// as to not create a situation where 3 too similar circumstances are mixed. However, for now, cars are the only type.
 		// Currently, this generates at max 3 cars for 3 roads if difficulty is 3. Trying not to ALWAYS generate max. amount of cars.
-		const circumstanceCount = Math.round(clamp(difficulty * 0.8, 1, possibleTargetGridPositions.length));
+		const circumstanceCount = Math.round(clamp(getRandomDoubleFromInterval(0.5, 1.5) * difficulty * 0.8, 1, possibleSubjectGridPositions.length));
 		console.log(`Generating ${circumstanceCount} circumstances.`);
 		const circumstances: Circumstance[] = [];
-		for (let circumstanceIndex = 0; circumstanceIndex < circumstanceCount && possibleTargetGridPositions.length > 0; circumstanceIndex++) {
-			const gridPositionOfCar = getRandomObjectOfArray(possibleTargetGridPositions);
-			circumstances.push(new Circumstance(this.streetLayout.hasRoadForward, this.streetLayout.hasRoadLeft, this.streetLayout.hasRoadRight, gridPositionOfCar));
-			// Remove the grid position where a subject just spawned from the list of possible positions
-			possibleTargetGridPositions.splice(possibleTargetGridPositions.indexOf(gridPositionOfCar), 1);
+
+		// In case we're on a straight road, other subjects can spawn anywhere along the road except in the spot where the user is.
+		if (this.streetLayout === STREET_LAYOUTS.STRAIGHT_ROAD) {
+			// This part ignores previous possibleGridPositions as it works on a different basis, taking into account roadside and knowing all gridPositions.
+			// This can surely be automated in a future revision.
+			// Overriding variable name for new purpose but same meaning.
+
+			// Hardcode a car in front of the user
+			circumstances.push(Circumstance.generateForStraightRoad(GridPosition.CENTER, RoadSide.TRAVEL_DIRECTION));
+
+			// Starting generation of more cars with 1 since we already added the obligatory one.
+			for (let i = 1; i < circumstanceCount; i++) {
+				const position = getRandomObjectOfArray(possibleSubjectGridPositions);
+				circumstances.push(Circumstance.generateForStraightRoad(position.gridPosition, position.roadSide));
+				possibleSubjectGridPositions.splice(possibleSubjectGridPositions.indexOf(position), 1);
+			}
+		} else {
+			for (let circumstanceIndex = 0; circumstanceIndex < circumstanceCount && possibleTargetGridPositions.length > 0; circumstanceIndex++) {
+				const gridPositionOfCar = getRandomObjectOfArray(possibleTargetGridPositions);
+				circumstances.push(Circumstance.generateForCrossing(this.streetLayout.hasRoadForward, this.streetLayout.hasRoadLeft, this.streetLayout.hasRoadRight, gridPositionOfCar));
+				// Remove the grid position where a subject just spawned from the list of possible positions
+				possibleTargetGridPositions.splice(possibleTargetGridPositions.indexOf(gridPositionOfCar), 1);
+			}
 		}
 
 		// Aggregating trafficSubjects into one array.
 		circumstances.forEach(circumstance =>
 			// Currently only one subject per circumstance is generated.
 			this.trafficSubjects.push(circumstance.trafficSubjects[0]));
+
+		console.log(`Generated situation: ${JSON.stringify(this)}`);
 	}
 
 }

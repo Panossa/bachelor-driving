@@ -3,6 +3,8 @@ import {Situation} from '../models/situation';
 import {RightOfWayService} from './right-of-way.service';
 import {QuestionType} from '../models/enums/question-type.enum';
 import {clamp} from '../utils/number-utils';
+import {STREET_LAYOUTS} from '../models/street-layout';
+import {OvertakeService} from './overtake.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,7 +22,7 @@ export class SituationService {
 	private static readonly INITIAL_DIFFICULTY = SituationService.MINIMUM_DIFFICULTY;
 	private static readonly DIFFICULTY_CHANGE_AMOUNT = 0.5;
 
-	constructor(private rightOfWayService: RightOfWayService) {
+	constructor(private rightOfWayService: RightOfWayService, private overtakeService: OvertakeService) {
 		this.currentDifficulty = SituationService.INITIAL_DIFFICULTY;
 	}
 
@@ -32,11 +34,14 @@ export class SituationService {
 		if (this.questionType === QuestionType.DO_QUESTION) {
 			// Get all possible answers for the current answer type.
 			// For this, ask the highest active rule set for all possible ones.
-			// For later: if(no traffic lights and no signs present) {
-			this.currentSituation.answers = this.rightOfWayService.possibleDoAnswers;
-
-			this.currentSituation.correctAnswers = this.rightOfWayService.calculateCorrectDoAnswers(this.currentSituation);
-			// }
+			if(this.currentSituation.streetLayout === STREET_LAYOUTS.STRAIGHT_ROAD) {
+				// also possible: if(no traffic lights and no signs present)
+				this.currentSituation.answers = this.overtakeService.possibleDoAnswers;
+				this.currentSituation.correctAnswers = this.overtakeService.calculateCorrectDoAnswers(this.currentSituation);
+			} else {
+				this.currentSituation.answers = this.rightOfWayService.possibleDoAnswers;
+				this.currentSituation.correctAnswers = this.rightOfWayService.calculateCorrectDoAnswers(this.currentSituation);
+			}
 		}
 
 		console.log(`Generated situation for difficulty ${this.currentDifficulty}!`);

@@ -4,18 +4,24 @@
 			<div class="subject-positioning"
 					 [class.positioning-top]="isOnGridPosition(subjectData[i], GridPosition.TOP)"
 					 [class.positioning-right]="isOnGridPosition(subjectData[i], GridPosition.RIGHT)"
-					 [class.positioning-bottom]="isOnGridPosition(subjectData[i], GridPosition.BOTTOM)"
+					 [class.positioning-bottom]="isOnGridPositions(subjectData[i], [GridPosition.BOTTOM, GridPosition.CENTER])"
 					 [class.positioning-left]="isOnGridPosition(subjectData[i], GridPosition.LEFT)"
 			>
 				<!--	Car placeholder 1	-->
-				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM])"
+				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM, GridPosition.CENTER])"
 						 [class.horizontal-subject]="isOnGridPositions(subjectData[i], [GridPosition.LEFT, GridPosition.RIGHT])">
-					<subject-car *ngIf="subjectData[i].trafficSubject1 != null" [gridPosition]="subjectData[i].trafficSubject1?.gridPosition" [turnSignal]="subjectData[i].trafficSubject1.turnSignal"></subject-car>
+					<subject-car *ngIf="subjectData[i].trafficSubject1 != null"
+											 [roadSide]="subjectData[i].trafficSubject1?.orientation"
+											 [gridPosition]="subjectData[i].trafficSubject1?.gridPosition"
+											 [turnSignal]="subjectData[i].trafficSubject1.turnSignal"></subject-car>
 				</div>
 				<!--	Car placeholder 2	-->
-				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM])"
+				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM, GridPosition.CENTER])"
 						 [class.horizontal-subject]="isOnGridPositions(subjectData[i], [GridPosition.LEFT, GridPosition.RIGHT])">
-					<subject-car *ngIf="subjectData[i].trafficSubject2 != null" [gridPosition]="subjectData[i].trafficSubject2?.gridPosition" [turnSignal]="subjectData[i].trafficSubject2.turnSignal"></subject-car>
+					<subject-car *ngIf="subjectData[i].trafficSubject2 != null"
+											 [roadSide]="subjectData[i].trafficSubject2?.orientation"
+											 [gridPosition]="subjectData[i].trafficSubject2?.gridPosition"
+											 [turnSignal]="subjectData[i].trafficSubject2.turnSignal"></subject-car>
 				</div>
 			</div>
 		</div>

@@ -9,11 +9,6 @@ export enum TurnSignal {
 }
 
 export function mapGridPositionsToTurnSignal(gridPositionOrigin: GridPosition, gridPositionTarget: GridPosition): TurnSignal {
-	if (gridPositionOrigin === GridPosition.CENTER || gridPositionTarget === GridPosition.CENTER) {
-		console.error("Tried mapping unsupported gridPosition to TurnSignal!");
-		return TurnSignal.NONE;
-	}
-
 	if (gridPositionTarget == betterMod(gridPositionOrigin - 1, 4)) {
 		return TurnSignal.LEFT;
 	}

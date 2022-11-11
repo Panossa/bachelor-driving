@@ -2,6 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {GridPosition} from '../../../models/enums/grid-position.enum';
 import {HSLColor} from '../../../models/hsl-color';
 import {TurnSignal} from '../../../models/enums/turn-signal.enum';
+import {RoadSide} from '../../../models/enums/road-side.enum';
+import {betterMod} from '../../../utils/number-utils';
 
 @Component({
 	selector: 'subject-car',
@@ -13,6 +15,8 @@ export class CarComponent implements OnInit {
 	@Input()
 	gridPosition: GridPosition;
 	@Input()
+	roadSide: RoadSide;
+	@Input()
 	turnSignal: TurnSignal = TurnSignal.NONE;
 	@Input()
 	baseColor: HSLColor = HSLColor.of(0, 0, 100);
@@ -22,24 +26,42 @@ export class CarComponent implements OnInit {
 	scale: number = 1;
 
 	ngOnInit(): void {
+		let baseRotation;
+		let relativeRotation;
 		switch (this.gridPosition) {
+			case GridPosition.CENTER:
+				baseRotation = 180;
+				break;
 			case GridPosition.TOP:
-				this.rotation = 180;
+				baseRotation = 180;
 				break;
 			case GridPosition.RIGHT:
-				this.rotation = 270;
+				baseRotation = 270;
 				this.scale = 1.5;
 				break;
 			case GridPosition.BOTTOM:
-				this.rotation = 0;
+				baseRotation = 0;
 				break;
 			case GridPosition.LEFT:
-				this.rotation = 90;
+				baseRotation = 90;
 				this.scale = 1.5;
 				break;
 			default:
 				console.error(`Car's been initialized without correct gridPosition. Given: ${this.gridPosition}`);
 		}
+
+		switch(this.roadSide) {
+			case RoadSide.OPPOSITE_DIRECTION:
+				relativeRotation = 0;
+				break;
+			case RoadSide.TRAVEL_DIRECTION:
+				relativeRotation = 180;
+				break;
+			default:
+				console.error(`Car has no roadside defined!`);
+		}
+
+		this.rotation = betterMod(relativeRotation + baseRotation, 360);
 	}
 
 	shouldShowRightTurn(): boolean {
