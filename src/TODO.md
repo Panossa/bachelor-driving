@@ -2,9 +2,9 @@
 
 Urgent:
 - TurnSignals timer!
-- As a simple second rule set, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
-- In case there are more than 3 possible answers, choose 3 randomly. In case there are less than 3, take as many as possible.
-- situation.service.ts: Other rule systems, no only DO_QUESTION.
+- As a simple second rule set for crossings, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
+- situation.service.ts: Other rule system, no only DO_QUESTION.
+  - Add ORDER_QUESTION for/powered by rightOfWay for crossings
 
 Nice to have:
 - Allow cars of different colors
@@ -14,6 +14,8 @@ Nice to have:
 - Generating subjects with TurnSignal.BOTH on straight roads for blocking question. 
 
 After bachelor's thesis:
+- Add CHECK_QUESTION for crossings? (maybe even straight roads?) Not sure if the answers would change though, lol.
+- In case there are more than 3 possible answers, choose 3 randomly.
 - SituationService: This might later be expanded with timeToAnswer in milliseconds as well as the points worth of the question for finer adjustments.
 - Check if it's possible for each rule set to define their own answers without collecting them all in one enum.
 	- see right-of-way.service.ts#possibleDoAnswers

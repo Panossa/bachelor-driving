@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {GridPosition} from '../../../models/enums/grid-position.enum';
 import {HSLColor} from '../../../models/hsl-color';
 import {TurnSignal} from '../../../models/enums/turn-signal.enum';
@@ -10,10 +10,10 @@ import {betterMod} from '../../../utils/number-utils';
 	templateUrl: './car.component.html',
 	styleUrls: ['./car.component.css']
 })
-export class CarComponent implements OnInit {
-
+export class CarComponent implements OnInit, OnDestroy {
 	@Input()
 	gridPosition: GridPosition;
+
 	@Input()
 	roadSide: RoadSide;
 	@Input()
@@ -22,10 +22,19 @@ export class CarComponent implements OnInit {
 	baseColor: HSLColor = HSLColor.of(0, 0, 100);
 
 	rotation: number = 0;
-
 	scale: number = 1;
 
+	isTurnSignalShown: boolean;
+	turnSignalTimer;
+
+	constructor(private changeDetection: ChangeDetectorRef) {
+	}
+
+
 	ngOnInit(): void {
+		this.isTurnSignalShown = false;
+		this.turnSignalTimer = setInterval(() => this.toggleTurnSignal(), 500);
+
 		let baseRotation;
 		let relativeRotation;
 		switch (this.gridPosition) {
@@ -64,6 +73,11 @@ export class CarComponent implements OnInit {
 		this.rotation = betterMod(relativeRotation + baseRotation, 360);
 	}
 
+	ngOnDestroy(): void {
+		// Destroy interval timer
+		clearInterval(this.turnSignalTimer);
+	}
+
 	shouldShowRightTurn(): boolean {
 		return this.turnSignal === TurnSignal.RIGHT || this.turnSignal === TurnSignal.BOTH;
 	}
@@ -72,4 +86,8 @@ export class CarComponent implements OnInit {
 		return this.turnSignal === TurnSignal.LEFT || this.turnSignal === TurnSignal.BOTH;
 	}
 
+	private toggleTurnSignal(): void {
+		this.isTurnSignalShown = !this.isTurnSignalShown;
+		this.changeDetection.detectChanges();
+	}
 }
