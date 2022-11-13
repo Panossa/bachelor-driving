@@ -21,6 +21,9 @@ export class CarComponent implements OnInit, OnDestroy {
 	@Input()
 	baseColor: HSLColor = HSLColor.of(0, 0, 100);
 
+	strokeColor: HSLColor;
+	windowColor: HSLColor = HSLColor.of(198, 88, 16);
+
 	rotation: number = 0;
 	scale: number = 1;
 
@@ -29,7 +32,6 @@ export class CarComponent implements OnInit, OnDestroy {
 
 	constructor(private changeDetection: ChangeDetectorRef) {
 	}
-
 
 	ngOnInit(): void {
 		this.isTurnSignalShown = false;
@@ -71,6 +73,10 @@ export class CarComponent implements OnInit, OnDestroy {
 		}
 
 		this.rotation = betterMod(relativeRotation + baseRotation, 360);
+
+		// Hue, saturation, value. For a stroke (shadow), change value to be darker. This is artistically not the best way
+		// but finding scientific sources for something like this is difficult, thus out of scope.
+		this.strokeColor = HSLColor.of(this.baseColor.hue, this.baseColor.saturation, this.baseColor.value / 2);
 	}
 
 	ngOnDestroy(): void {

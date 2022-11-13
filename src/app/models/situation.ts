@@ -12,6 +12,7 @@ import {getWeightedRandomElement, WeightedObject} from '../utils/random-utils';
 
 export class Situation {
 
+	// The user's car
 	readonly oneself: TrafficSubject;
 	readonly streetLayout: StreetLayout;
 
