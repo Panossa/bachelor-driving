@@ -6,6 +6,7 @@ import {RoadSide} from './enums/road-side.enum';
 import {TrafficSubjectTypes} from './enums/traffic-subject-type.enum';
 import {mapGridPositionsToTurnSignal, TurnSignal} from './enums/turn-signal.enum';
 import {getRandomObjectOfArray} from '../utils/array-utils';
+import {SubjectColor} from './subject-colors';
 
 export class Circumstance {
 	readonly id: string; // mostly (subject/object) (current position) [destination]. E.g. CAR_FROM_RIGHT_TO_THEIR_LEFT
@@ -15,7 +16,7 @@ export class Circumstance {
 	/**
 	 * Constructor for anything except a straight road.
 	 */
-	static generateForCrossing(hasRoadForward: boolean, hasRoadLeft: boolean, hasRoadRight: boolean, gridPosition: GridPosition): Circumstance {
+	static generateForCrossing(hasRoadForward: boolean, hasRoadLeft: boolean, hasRoadRight: boolean, gridPosition: GridPosition, subjectColor: SubjectColor): Circumstance {
 		// Find out which direction a subject wants to go in
 		// Collect all possible directions
 		const possibleTurnSignals: TurnSignal[] = [];
@@ -40,7 +41,8 @@ export class Circumstance {
 				type: TrafficSubjectTypes.CAR,
 				gridPosition: gridPosition,
 				orientation: RoadSide.OPPOSITE_DIRECTION,
-				turnSignal: turnSignal
+				turnSignal: turnSignal,
+				baseColor: subjectColor
 			}]
 		};
 	}
@@ -48,14 +50,15 @@ export class Circumstance {
 	/**
 	 * Constructor for a straight road.
 	 */
-	static generateForStraightRoad(gridPosition: GridPosition, roadSide: RoadSide) {
+	static generateForStraightRoad(gridPosition: GridPosition, roadSide: RoadSide, subjectColor: SubjectColor): Circumstance {
 		return {
 			id: String(Math.random()).substring(2,5),
 			trafficSubjects: [{
 				type: TrafficSubjectTypes.CAR,
 				gridPosition: gridPosition,
 				orientation: roadSide,
-				turnSignal: TurnSignal.NONE // This can be randomly generated as BOTH in the future.
+				turnSignal: TurnSignal.NONE, // This can be randomly generated as BOTH in the future.
+				baseColor: subjectColor
 			}]
 		}
 	}

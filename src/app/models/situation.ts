@@ -9,6 +9,7 @@ import {STREET_LAYOUTS, StreetLayout} from './street-layout';
 import {getRandomObjectOfArray} from '../utils/array-utils';
 import {clamp, getRandomDoubleFromInterval} from '../utils/number-utils';
 import {getWeightedRandomElement, WeightedObject} from '../utils/random-utils';
+import {SubjectColor, SubjectColors} from './subject-colors';
 
 export class Situation {
 
@@ -26,6 +27,8 @@ export class Situation {
 	answers: DoAnswer[];
 	// set from outside as this is dependent on outside data:
 	correctAnswers: DoAnswer[];
+
+	private readonly possibleSubjectColors: SubjectColor[];
 
 	// Creates a random situation
 	constructor(difficulty: number) {
@@ -75,7 +78,8 @@ export class Situation {
 			// viewed from a central perspective, the user is on the opposite driving direction for everyone involved
 			orientation: RoadSide.OPPOSITE_DIRECTION,
 			gridPosition: GridPosition.BOTTOM,
-			turnSignal: mapGridPositionsToTurnSignal(GridPosition.BOTTOM, getRandomObjectOfArray(possibleTargetGridPositions))
+			turnSignal: mapGridPositionsToTurnSignal(GridPosition.BOTTOM, getRandomObjectOfArray(possibleTargetGridPositions)),
+			baseColor: SubjectColors.WHITE
 		};
 
 		// Define at least one circumstance, up to a circumstance per street (e.g. 3 cars on 3 possible roads).
@@ -86,6 +90,13 @@ export class Situation {
 		console.log(`Generating ${circumstanceCount} circumstances.`);
 		const circumstances: Circumstance[] = [];
 
+		// Generate list of possible colors for other subjects. First, get all properties of the Colors object...
+		this.possibleSubjectColors = Object.getOwnPropertyNames(SubjectColors)
+			// ...then filter out default JavaScript properties like length as well as the color WHITE as it's reserved for the user...
+			.filter(propertyName => !["length", "name", "prototype", "WHITE"].includes(propertyName))
+			// ...then map all property names back to the actual properties.
+			.map(propertyName => SubjectColors[propertyName]);
+
 		// In case we're on a straight road, other subjects can spawn anywhere along the road except in the spot where the user is.
 		if (this.streetLayout === STREET_LAYOUTS.STRAIGHT_ROAD) {
 			// This part ignores previous possibleGridPositions as it works on a different basis, taking into account roadside and knowing all gridPositions.
@@ -93,18 +104,18 @@ export class Situation {
 			// Overriding variable name for new purpose but same meaning.
 
 			// Hardcode a car in front of the user
-			circumstances.push(Circumstance.generateForStraightRoad(GridPosition.CENTER, RoadSide.TRAVEL_DIRECTION));
+			circumstances.push(Circumstance.generateForStraightRoad(GridPosition.CENTER, RoadSide.TRAVEL_DIRECTION, this.getPossibleSubjectColor()));
 
 			// Starting generation of more cars with 1 since we already added the obligatory one.
 			for (let i = 1; i < circumstanceCount; i++) {
 				const position = getRandomObjectOfArray(possibleSubjectGridPositions);
-				circumstances.push(Circumstance.generateForStraightRoad(position.gridPosition, position.roadSide));
+				circumstances.push(Circumstance.generateForStraightRoad(position.gridPosition, position.roadSide, this.getPossibleSubjectColor()));
 				possibleSubjectGridPositions.splice(possibleSubjectGridPositions.indexOf(position), 1);
 			}
 		} else {
 			for (let circumstanceIndex = 0; circumstanceIndex < circumstanceCount && possibleTargetGridPositions.length > 0; circumstanceIndex++) {
 				const gridPositionOfCar = getRandomObjectOfArray(possibleTargetGridPositions);
-				circumstances.push(Circumstance.generateForCrossing(this.streetLayout.hasRoadForward, this.streetLayout.hasRoadLeft, this.streetLayout.hasRoadRight, gridPositionOfCar));
+				circumstances.push(Circumstance.generateForCrossing(this.streetLayout.hasRoadForward, this.streetLayout.hasRoadLeft, this.streetLayout.hasRoadRight, gridPositionOfCar, this.getPossibleSubjectColor()));
 				// Remove the grid position where a subject just spawned from the list of possible positions
 				possibleTargetGridPositions.splice(possibleTargetGridPositions.indexOf(gridPositionOfCar), 1);
 			}
@@ -116,6 +127,13 @@ export class Situation {
 			this.trafficSubjects.push(circumstance.trafficSubjects[0]));
 
 		console.log(`Generated situation: ${JSON.stringify(this)}`);
+	}
+
+	private getPossibleSubjectColor(): SubjectColor {
+		const colorOfCar = getRandomObjectOfArray(this.possibleSubjectColors);
+		// Remove the color from possible colors
+		this.possibleSubjectColors.splice(this.possibleSubjectColors.indexOf(colorOfCar), 1);
+		return colorOfCar;
 	}
 
 }

@@ -1,14 +1,13 @@
 # Todo
 
 Urgent:
-- TurnSignals timer!
 - As a simple second rule set for crossings, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
-- situation.service.ts: Other rule system, no only DO_QUESTION.
-  - Add ORDER_QUESTION for/powered by rightOfWay for crossings
 
 Nice to have:
 - Allow cars of different colors
 	- reflect this change in the answer texts
+- situation.service.ts: Other rule system, no only DO_QUESTION. Add ORDER_QUESTION for/powered by rightOfWay for crossings
+	- BLOCKED BY COLOR TODO
 - Add hint texts!
 - Test other browsers (Edge, Firefox)!
 - Generating subjects with TurnSignal.BOTH on straight roads for blocking question. 

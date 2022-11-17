@@ -13,7 +13,8 @@
 					<subject-car *ngIf="subjectData[i].trafficSubject1 != null"
 											 [roadSide]="subjectData[i].trafficSubject1?.orientation"
 											 [gridPosition]="subjectData[i].trafficSubject1?.gridPosition"
-											 [turnSignal]="subjectData[i].trafficSubject1.turnSignal"></subject-car>
+											 [turnSignal]="subjectData[i].trafficSubject1?.turnSignal"
+											 [baseColor]="subjectData[i].trafficSubject1?.baseColor.color"></subject-car>
 				</div>
 				<!--	Car placeholder 2	-->
 				<div [class.vertical-subject]="isOnGridPositions(subjectData[i], [GridPosition.TOP, GridPosition.BOTTOM, GridPosition.CENTER])"
@@ -21,7 +22,8 @@
 					<subject-car *ngIf="subjectData[i].trafficSubject2 != null"
 											 [roadSide]="subjectData[i].trafficSubject2?.orientation"
 											 [gridPosition]="subjectData[i].trafficSubject2?.gridPosition"
-											 [turnSignal]="subjectData[i].trafficSubject2.turnSignal"></subject-car>
+											 [turnSignal]="subjectData[i].trafficSubject2?.turnSignal"
+											 [baseColor]="subjectData[i].trafficSubject2?.baseColor.color"></subject-car>
 				</div>
 			</div>
 		</div>
