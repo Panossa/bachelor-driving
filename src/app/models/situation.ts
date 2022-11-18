@@ -15,12 +15,9 @@ export class Situation {
 
 	// The user's car
 	readonly oneself: TrafficSubject;
+	// Relevant traffic subjects other than the user.
+	readonly trafficSubjects: TrafficSubject[] = [];
 	readonly streetLayout: StreetLayout;
-
-	/**
-	 * Relevant traffic subjects other than the user.
-	 */
-	trafficSubjects: TrafficSubject[] = [];
 
 	// must be max. 3. Upgrade for other types of questions to: DoAnswer[] | CheckAnswer[] etc.:
 	// Possible answers are dependent on the highest active rule set (e.g. traffic lights) and set from outside.

@@ -13,6 +13,6 @@ export enum DoAnswer {
 	KEEP_SPEED="fahre gleichbleibend weiter",
 	ACCELERATE="beschleunige",
 	HONK="hupe",
-	STALEMATE="kommuniziere per Handzeichen mit den anderen Verkehrsteilnehmern, um zu klären, wer fahren darf, da den Regeln zufolge niemand Vorfahrt hat"
+	STALEMATE="kommuniziere per Handzeichen mit den anderen Verkehrsteilnehmern, um zu klären, wer fährt"
 	// Theoretically also possible: rare actions like driving over train tracks.
 }
