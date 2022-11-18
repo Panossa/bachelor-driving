@@ -5,6 +5,9 @@ import {QuestionType} from '../models/enums/question-type.enum';
 import {clamp} from '../utils/number-utils';
 import {STREET_LAYOUTS} from '../models/street-layout';
 import {OvertakeService} from './overtake.service';
+import {RuleCalculator} from './rule-calculator';
+import {removeDuplicatesFilter} from '../utils/array-utils';
+import {DoAnswer} from '../models/enums/do-answer.enum';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,19 +33,26 @@ export class SituationService {
 		this.questionType = QuestionType.DO_QUESTION;
 		this.currentSituation = new Situation(this.currentDifficulty);
 
+		const ruleCalculators: RuleCalculator[] = [];
 		// Check for main rule giver in the following order: [TrafficLights, TrafficSigns, default: RightOfWay]
 		if (this.questionType === QuestionType.DO_QUESTION) {
 			// Get all possible answers for the current answer type.
 			// For this, ask the highest active rule set for all possible ones.
 			if(this.currentSituation.streetLayout === STREET_LAYOUTS.STRAIGHT_ROAD) {
 				// also possible: if(no traffic lights and no signs present)
-				this.currentSituation.answers = this.overtakeService.possibleDoAnswers;
+				ruleCalculators.push(this.overtakeService);
 				this.currentSituation.correctAnswers = this.overtakeService.calculateCorrectDoAnswers(this.currentSituation);
 			} else {
-				this.currentSituation.answers = this.rightOfWayService.possibleDoAnswers;
 				this.currentSituation.correctAnswers = this.rightOfWayService.calculateCorrectDoAnswers(this.currentSituation);
 			}
 		}
+
+		const aggregatePossibleAnswers: DoAnswer[] = [];
+		const aggregateCorrectAnswers: DoAnswer[] = []; // TODO find out how to let one rule set outweigh the other(s)
+		ruleCalculators.forEach(ruleCalculator => {
+			ruleCalculator.possibleDoAnswers.forEach(answer => aggregatePossibleAnswers.push(answer));
+		});
+		aggregatePossibleAnswers.filter(removeDuplicatesFilter).forEach(answer => this.currentSituation.answers.push(answer));
 
 		console.log(`Generated situation for difficulty ${this.currentDifficulty}!`);
 	}
