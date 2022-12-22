@@ -1,14 +1,14 @@
 # Todo
 
 Urgent:
-- As a simple second rule set for crossings, add the rule that if a road is blocked by someone on the TRAVEL_DIRECTION, the user has to wait for the road to be clear.
-- Roadblock (not staying car) as object on a street
+- DONE
 
 Nice to have:
 - Reflect colors in the answer texts
 - situation.service.ts: Other rule system, no only DO_QUESTION. Add ORDER_QUESTION for/powered by rightOfWay for crossings
 	- BLOCKED BY COLOR TODO
 - Add hint texts!
+- Roadblock (not staying car) as object on a street
 - Test other browsers (Edge, Firefox)!
 - Generating subjects with TurnSignal.BOTH on straight roads for blocking question. 
 

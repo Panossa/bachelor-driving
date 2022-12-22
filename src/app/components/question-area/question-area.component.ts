@@ -30,7 +30,7 @@ export class QuestionAreaComponent implements OnInit {
 
 		// Update title according to the type of answers we're showing.
 		if (Object.values(DoAnswer).includes(situationAnswers[0])) {
-			this.questionTitle = "Was tun Sie in dieser Situation?";
+			this.questionTitle = "Sie sind der Fahrer des weißen Fahrzeuges. Was tun Sie in dieser Situation?";
 		}
 
 		this.answers = [
