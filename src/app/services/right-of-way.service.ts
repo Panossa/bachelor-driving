@@ -25,7 +25,7 @@ export class RightOfWayService implements RuleCalculator {
 	calculateCorrectDoAnswers(situation: Situation): DoAnswer[] {
 		const orderedTrafficSubjects = this.calculateRightOfWayOrder(situation);
 		if (orderedTrafficSubjects.length === 0) {
-			return [DoAnswer.STALEMATE];
+			return [DoAnswer.STAY, DoAnswer.STALEMATE];
 		} else {
 			if (orderedTrafficSubjects[0].includes(situation.oneself)) {
 				return [DoAnswer.START_DRIVING];
